@@ -17,6 +17,7 @@
 
 #include "SQLiteRepository.h"
 
+#include <QVariant>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>

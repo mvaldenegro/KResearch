@@ -20,10 +20,14 @@
 
 #include <QAbstractItemModel>
 
+#include <library/dao/AuthorDAO.h>
+
 class AuthorModel : public QAbstractItemModel
 {
+    Q_OBJECT
+
     public:
-        AuthorModel();
+        AuthorModel(AuthorDAO *authorDAO);
         virtual ~AuthorModel();
 
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -38,6 +42,17 @@ class AuthorModel : public QAbstractItemModel
         virtual QModelIndex parent(const QModelIndex& index) const;
 
         Qt::ItemFlags flags(const QModelIndex &index) const;
+
+    public Q_SLOTS:
+        void invalidateData();
+
+    private:
+
+        QVariant handleColumnNames(int column) const;
+        QVariant handleRead(Author::Ptr author, int column) const;
+        bool handleWrite(Author::Ptr author, const QVariant& value, int column);
+
+        AuthorDAO *mAuthorDAO;
 };
 
 #endif /* AUTHORMODEL_H_ */

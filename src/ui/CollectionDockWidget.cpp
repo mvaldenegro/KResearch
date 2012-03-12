@@ -33,6 +33,7 @@ CollectionDockWidget::CollectionDockWidget(QWidget *parent)
 
     setupLibraryTree();
 
+    connect(mTree, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemActivated(QTreeWidgetItem *, int)));
 }
 
 CollectionDockWidget::~CollectionDockWidget()
@@ -43,22 +44,10 @@ void CollectionDockWidget::setupLibraryTree()
 {
     mTree = new QTreeWidget(this);
 
-    QPalette p = mTree->palette();
-    //p.setColor(QPalette::Active, QPalette::Background, p.color(QPalette::Active, QPalette::Window));
-    //mTree->setPalette(p);
-    //mTree->setAutoFillBackground(false);
-    //mTree->setStyleSheet("QTreeView { background-color: palette(window); }");
-
-    //qDebug() << "Active window color" << p.color(QPalette::Active, QPalette::Window);
-
-    //mTree->setFrameShadow(QFrame::Plain);
-    //mTree->setFrameShape(QFrame::StyledPanel);
 
     mTree->setColumnCount(1);
     mTree->setHeaderHidden(true);
     mTree->setIndentation(10);
-    //mTree->setFrameStyle(QFrame::NoFrame);
-    //mTree->setLineWidth(0);
     mTree->setIconSize(QSize(32, 32));
 
     //mTree->setStyleSheet("QTreeView::branch:has-children {image: url(:/images/1rightarrow.png)}"
@@ -70,22 +59,23 @@ void CollectionDockWidget::setupLibraryTree()
     mLibraryItem = new QTreeWidgetItem(mTree, QStringList("Library"));
     mLibraryItem->setFont(0, font);
 
-    (new QTreeWidgetItem(mLibraryItem, QStringList("Articles")))->setIcon(0, KIcon("document-multiple"));
-    (new QTreeWidgetItem(mLibraryItem, QStringList("Books")))->setIcon(0, KIcon("documentation"));
-    (new QTreeWidgetItem(mLibraryItem, QStringList("Patents")))->setIcon(0, KIcon("view-bank"));
-    (new QTreeWidgetItem(mLibraryItem, QStringList("Miscellaneous")))->setIcon(0, KIcon("page-simple"));
+    QTreeWidgetItem *articles = new QTreeWidgetItem(mLibraryItem, QStringList("Articles"));
+    articles->setIcon(0, KIcon("document-multiple"));
+    QTreeWidgetItem *authors = new QTreeWidgetItem(mLibraryItem, QStringList("Authors"));
+    authors->setIcon(0, KIcon("user-identity"));
+    QTreeWidgetItem *journals  = new QTreeWidgetItem(mLibraryItem, QStringList("Journals"));
+    journals->setIcon(0, KIcon("application-epub+zip"));
 
     mResearchItem = new QTreeWidgetItem(mTree, QStringList("Research"));
     mResearchItem->setFont(0, font);
 
-    (new QTreeWidgetItem(mResearchItem, QStringList("Notes")))->setIcon(0, KIcon("folder-txt"));
+    QTreeWidgetItem *notes = new QTreeWidgetItem(mResearchItem, QStringList("Notes"));
+    notes->setIcon(0, KIcon("folder-txt"));
 
-    mSourcesItem      = new QTreeWidgetItem(mTree, QStringList("Sources"));
+    mSourcesItem = new QTreeWidgetItem(mTree, QStringList("Sources"));
     mSourcesItem->setFont(0, font);
 
-    (new QTreeWidgetItem(mSourcesItem, QStringList("Authors")))->setIcon(0, KIcon("user-identity"));
     (new QTreeWidgetItem(mSourcesItem, QStringList("Conferences")))->setIcon(0, KIcon("meeting-attending"));
-    (new QTreeWidgetItem(mSourcesItem, QStringList("Journals")))->setIcon(0, KIcon("application-epub+zip"));
     (new QTreeWidgetItem(mSourcesItem, QStringList("Periodicals")))->setIcon(0, KIcon("knewsticker"));
     (new QTreeWidgetItem(mSourcesItem, QStringList("Web")))->setIcon(0, KIcon("document-open-remote"));
 
@@ -95,4 +85,11 @@ void CollectionDockWidget::setupLibraryTree()
     mTree->expandAll();
 
     setWidget(mTree);
+}
+
+void CollectionDockWidget::itemActivated(QTreeWidgetItem *item, int column)
+{
+    Q_UNUSED(column);
+
+    emit changeView(item->text(0));
 }

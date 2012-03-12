@@ -25,12 +25,20 @@ class QTreeWidgetItem;
 
 class CollectionDockWidget : public QDockWidget
 {
+    Q_OBJECT
+
     public:
         CollectionDockWidget(QWidget *parent);
         virtual ~CollectionDockWidget();
 
+    signals:
+        void changeView(const QString& viewName);
+
     protected:
         void setupLibraryTree();
+
+    protected Q_SLOTS:
+        void itemActivated(QTreeWidgetItem *item, int column);
 
     private:
 

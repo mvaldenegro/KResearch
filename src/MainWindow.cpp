@@ -17,16 +17,19 @@
 
 #include "MainWindow.h"
 #include "LibraryView.h"
+#include "AuthorView.h"
+
 #include <ui/PreviewTab.h>
 #include <ui/InformationDockWidget.h>
 #include <ui/CollectionDockWidget.h>
+#include <ui/ConcealedTabWidget.h>
 
 #include <QDebug>
+#include <QStackedWidget>
 
 #include <KSharedConfig>
 #include <KGlobal>
 #include <KConfig>
-#include <KTabWidget>
 #include <KStatusNotifierItem>
 
 #include <QHBoxLayout>
@@ -36,16 +39,21 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setCaption("KResearch");
 
-
-    mTabWidget = new KTabWidget(this);
+    mTabWidget = new ConcealedTabWidget(this);
     mTabWidget->setTabsClosable(true);
 
+    mViewWidget = new QStackedWidget(this);
+
     mLibraryView = new LibraryView(this);
+    mAuthorView = new AuthorView(this);
+
+    mViewWidget->addWidget(mLibraryView);
+    mViewWidget->addWidget(mAuthorView);
+
+    mTabWidget->addTab(mViewWidget, "Articles");
 
     connect(mLibraryView, SIGNAL(activated(const QString&)), this, SLOT(openPreview(const QString&)));
     connect(mTabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
-
-    mTabWidget->addTab(mLibraryView, "Library");
 
     mTrayIcon = new KStatusNotifierItem(this);
     mTrayIcon->setTitle("KResearch");
@@ -72,9 +80,8 @@ void MainWindow::openPreview(const QString& fileName)
 
 void MainWindow::tabCloseRequested(int idx)
 {
-    QString tabTitle = mTabWidget->tabText(idx);
-
-    if(tabTitle.contains("Library")) {
+    // Don't close the tab containing the main view (Library, Author, Journal, etc).
+    if(idx == 0) {
         return;
     }
 
@@ -87,25 +94,42 @@ void MainWindow::tabCloseRequested(int idx)
     }
 }
 
+void MainWindow::switchView(const QString& viewName)
+{
+    bool sw = false;
+
+    if(viewName == "Authors") {
+        mViewWidget->setCurrentWidget(mAuthorView);
+        mTabWidget->setTabText(0, "Authors");
+
+        sw = true;
+    }
+
+    if(viewName == "Articles") {
+        mViewWidget->setCurrentWidget(mLibraryView);
+        mTabWidget->setTabText(0, "Articles");
+
+        sw = true;
+    }
+
+    if(sw) {
+        mTabWidget->setCurrentIndex(0);
+    }
+}
+
 void MainWindow::loadConfig()
 {
-    qDebug() << "loadConfig";
-
-
     KSharedConfigPtr config = KGlobal::config();
 
     QByteArray geometry = config->group("mainwindow").readEntry("geometry", QByteArray());
     QByteArray state = config->group("mainwindow").readEntry("state", QByteArray());
 
-    qDebug() << "geometry state size" << geometry.size();
-    qDebug() << "restoreGeometry" << restoreGeometry(geometry);
-    qDebug() << "restoreState" << restoreState(state);
+    restoreGeometry(geometry);
+    restoreState(state);
 }
 
 void MainWindow::saveConfig()
 {
-    qDebug() << "saveConfig";
-
     KSharedConfigPtr config = KGlobal::config();
 
     config->group("mainwindow").writeEntry("geometry", saveGeometry());
@@ -129,4 +153,6 @@ void MainWindow::setupDockWidgets()
     addDockWidget(Qt::RightDockWidgetArea, mRightDock);
 
     connect(mLibraryView, SIGNAL(selected(Publication::Ptr)), mRightDock, SLOT(display(Publication::Ptr)));
+
+    connect(mLeftDock, SIGNAL(changeView(const QString&)), this, SLOT(switchView(const QString&)));
 }

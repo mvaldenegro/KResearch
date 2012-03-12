@@ -40,7 +40,7 @@
 #include <sqliteLibrary/SQLiteRepository.h>
 
 LibraryView::LibraryView(QWidget *parent)
- : QWidget(parent)
+ : BaseView(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
@@ -56,40 +56,40 @@ LibraryView::LibraryView(QWidget *parent)
     connect(mArticleView, SIGNAL(activated(const QModelIndex&)), this, SLOT(activated(const QModelIndex&)));
     connect(mArticleView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(clicked(const QModelIndex&)));
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("publications.sqlite");
-
-    bool ok = db.open();
-
-    if(ok) {
-        qDebug() << "Database OK";
-    } else {
-        qDebug() << "Database could NOT be opened, exiting!";
-        KApplication::instance()->exit(-1);
-    }
-
-    SQLiteRepository *cache = new SQLiteRepository(db);
-    mImportService = new PublicationImportService(cache->publicationDAO());
-
-    mRepository = cache;
-
     mSearchEdit->setClearButtonShown(true);
 
-    mArticleView->setModel(new PublicationModel(cache->publicationDAO()));
-    mArticleView->setAlternatingRowColors(true);
-    mArticleView->verticalHeader()->hide();
-    mArticleView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-    mArticleView->setAcceptDrops(true);
-    mArticleView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    mArticleView->setSelectionMode(QAbstractItemView::SingleSelection);
+    configureTableView(mArticleView);
 
-    mArticleView->setEditTriggers(QAbstractItemView::AnyKeyPressed);
+    mArticleView->setModel(new PublicationModel(Repository::self()->publicationDAO()));
+    mArticleView->setAcceptDrops(true);
+
 
     mSelectedPub = Publication::Ptr(0);
+
+    loadConfig();
 }
 
 LibraryView::~LibraryView()
 {
+    saveConfig();
+}
+
+void LibraryView::saveConfig()
+{
+    KSharedConfigPtr config = KGlobal::config();
+
+    config->group("libraryview").writeEntry("headerstate", mArticleView->horizontalHeader()->saveState());
+
+    config->sync();
+}
+
+void LibraryView::loadConfig()
+{
+    KSharedConfigPtr config = KGlobal::config();
+
+    QByteArray headerState = config->group("libraryview").readEntry("headerstate", QByteArray());
+
+    mArticleView->horizontalHeader()->restoreState(headerState);
 }
 
 void LibraryView::import()
@@ -100,7 +100,7 @@ void LibraryView::import()
         return;
     }
 
-    mImportService->import(fileName);
+    importService()->import(fileName);
 }
 
 void LibraryView::edit()
@@ -116,7 +116,7 @@ void LibraryView::activated(const QModelIndex& idx)
         return;
     }
 
-    QString localFileName = mRepository->publications()->findAll().at(idx.row())->localUrl();
+    QString localFileName = Repository::self()->publications()->findAll().at(idx.row())->localUrl();
 
     qDebug() << "Activated" << localFileName;
 
@@ -131,7 +131,7 @@ void LibraryView::clicked(const QModelIndex &idx)
         return;
     }
 
-    Publication::Ptr pub = mRepository->publications()->findAll().at(idx.row());
+    Publication::Ptr pub = Repository::self()->publications()->findAll().at(idx.row());
 
     if(pub != 0) {
 

@@ -23,8 +23,11 @@
 class CollectionDockWidget;
 class InformationDockWidget;
 class LibraryView;
+class AuthorView;
+class ConcealedTabWidget;
 
-class KTabWidget;
+class QStackedWidget;
+
 class KStatusNotifierItem;
 
 class MainWindow : public KMainWindow
@@ -38,6 +41,7 @@ class MainWindow : public KMainWindow
 	public Q_SLOTS:
 	    void openPreview(const QString& fileName);
 	    void tabCloseRequested(int index);
+	    void switchView(const QString& viewName);
 
 	protected:
 	    void loadConfig();
@@ -48,11 +52,15 @@ class MainWindow : public KMainWindow
 	private:
 	    void setupDockWidgets();
 
+	    QStackedWidget *mViewWidget;
+
 		CollectionDockWidget *mLeftDock;
 		InformationDockWidget *mRightDock;
-		LibraryView *mLibraryView;
 
-		KTabWidget *mTabWidget;
+		LibraryView *mLibraryView;
+		AuthorView *mAuthorView;
+
+		ConcealedTabWidget *mTabWidget;
 		KStatusNotifierItem *mTrayIcon;
 
 };

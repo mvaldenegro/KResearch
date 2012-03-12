@@ -22,15 +22,16 @@
 
 #include <library/Publication.h>
 
+#include "BaseView.h"
+
 class QModelIndex;
 class QToolBar;
 class QTableView;
 class KLineEdit;
 
 class Repository;
-class PublicationImportService;
 
-class LibraryView : public QWidget
+class LibraryView : public BaseView
 {
     Q_OBJECT
 
@@ -42,6 +43,9 @@ class LibraryView : public QWidget
         {
             return mSelectedPub;
         }
+
+        void saveConfig();
+        void loadConfig();
 
     public Q_SLOTS:
         void import();
@@ -63,9 +67,6 @@ class LibraryView : public QWidget
         KLineEdit *mSearchEdit;
 
         Publication::Ptr mSelectedPub;
-
-        Repository *mRepository;
-        PublicationImportService *mImportService;
 };
 
 #endif /* CENTRALVIEW_H_ */

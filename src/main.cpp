@@ -7,6 +7,7 @@
 #include "MainWindow.h"
 
 #include <QDebug>
+#include <library/LibraryManager.h>
 #include <pdfwidget/PDFDocumentDialog.h>
 
 int main (int argc, char *argv[])
@@ -23,8 +24,14 @@ int main (int argc, char *argv[])
 
     //qDebug() << PDFDocumentDialog::selectString("/home/mvaldenegro/cf-vallejos_ps.pdf");
 
+    LibraryManager *libmanager = new LibraryManager();
+
     MainWindow *window = new MainWindow();
     window->show();
 
-    return app.exec();
+    int ret = app.exec();
+
+    delete libmanager;
+
+    return ret;
 }

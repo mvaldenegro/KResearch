@@ -7,12 +7,13 @@ include_directories(src)
 
 set(kresearch_SRCS src/main.cpp src/MainWindow.cpp
                    src/ui/CollectionDockWidget.cpp src/ui/InformationDockWidget.cpp src/ui/PreviewTab.cpp
-                   src/ui/PublicationEditDialog.cpp src/ui/AuthorEditWidget.cpp
-                   src/LibraryView.cpp
+                   src/ui/PublicationEditDialog.cpp src/ui/AuthorEditWidget.cpp src/ui/ConcealedTabWidget.cpp
+                   src/LibraryView.cpp src/BaseView.cpp src/AuthorView.cpp
+                   src/library/LibraryManager.cpp
                    src/library/Author.cpp src/library/Publication.cpp src/library/BaseEntity.cpp
                    src/library/Repository.cpp src/library/PublicationType.cpp
                    src/library/dao/AuthorDAO.cpp src/library/dao/PublicationDAO.cpp src/library/dao/BaseDAO.cpp
-                   src/library/model/PublicationModel.cpp
+                   src/library/model/PublicationModel.cpp src/library/model/AuthorModel.cpp
                    src/import/PublicationImportService.cpp src/import/PDFImportWizard.cpp
                    src/import/PDFImportWizardTitlePage.cpp src/import/PDFImportWizardAuthorPage.cpp
                    src/sqliteLibrary/SQLiteAuthorDAO.cpp src/sqliteLibrary/SQLiteRepository.cpp

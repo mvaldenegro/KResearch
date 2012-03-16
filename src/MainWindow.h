@@ -24,6 +24,7 @@ class CollectionDockWidget;
 class InformationDockWidget;
 class LibraryView;
 class AuthorView;
+class JournalView;
 class ConcealedTabWidget;
 
 class QStackedWidget;
@@ -59,6 +60,7 @@ class MainWindow : public KMainWindow
 
 		LibraryView *mLibraryView;
 		AuthorView *mAuthorView;
+		JournalView *mJournalView;
 
 		ConcealedTabWidget *mTabWidget;
 		KStatusNotifierItem *mTrayIcon;

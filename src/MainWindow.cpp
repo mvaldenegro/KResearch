@@ -18,6 +18,7 @@
 #include "MainWindow.h"
 #include "LibraryView.h"
 #include "AuthorView.h"
+#include "JournalView.h"
 
 #include <ui/PreviewTab.h>
 #include <ui/InformationDockWidget.h>
@@ -46,9 +47,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     mLibraryView = new LibraryView(this);
     mAuthorView = new AuthorView(this);
+    mJournalView = new JournalView(this);
 
     mViewWidget->addWidget(mLibraryView);
     mViewWidget->addWidget(mAuthorView);
+    mViewWidget->addWidget(mJournalView);
 
     mTabWidget->addTab(mViewWidget, "Articles");
 
@@ -108,6 +111,13 @@ void MainWindow::switchView(const QString& viewName)
     if(viewName == "Articles") {
         mViewWidget->setCurrentWidget(mLibraryView);
         mTabWidget->setTabText(0, "Articles");
+
+        sw = true;
+    }
+
+    if(viewName == "Journals") {
+        mViewWidget->setCurrentWidget(mJournalView);
+        mTabWidget->setTabText(0, "Journals");
 
         sw = true;
     }

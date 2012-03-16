@@ -116,6 +116,7 @@ QStringList SQLitePublicationDAO::journals() const
 {
     QSqlQuery query(database());
     query.prepare("SELECT DISTINCT journal FROM publication");
+    query.exec();
 
     QStringList ret;
 
@@ -134,6 +135,7 @@ QStringList SQLitePublicationDAO::conferences() const
 {
     QSqlQuery query(database());
     query.prepare("SELECT DISTINCT conference FROM publication");
+    query.exec();
 
     QStringList ret;
 

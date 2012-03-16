@@ -20,9 +20,8 @@
 
 #include <library/BaseEntity.h>
 #include <library/Author.h>
+#include <library/PublicationType.h>
 
-#define QT_SHAREDPOINTER_TRACK_POINTERS
-#include <QSharedPointer>
 #include <QStringList>
 #include <QString>
 
@@ -88,9 +87,19 @@ class Publication : public BaseEntity
             return mNumber;
         }
 
+        bool isPeerReviewed() const
+        {
+            return mIsPeerReviewed;
+        }
+
         QString publisher() const
         {
             return mPublisher;
+        }
+
+        bool isPublished() const
+        {
+            return mIsPublished;
         }
 
         QString series() const
@@ -138,9 +147,19 @@ class Publication : public BaseEntity
             this->mNumber = mNumber;
         }
 
+        void setPeerReviewed(bool peerReview)
+        {
+            this->mIsPeerReviewed = peerReview;
+        }
+
         void setPublisher(QString mPublisher)
         {
             this->mPublisher = mPublisher;
+        }
+
+        void setPublished(bool published)
+        {
+            this->mIsPublished = published;
         }
 
         void setSeries(QString mSeries)
@@ -156,6 +175,11 @@ class Publication : public BaseEntity
         void setTitle(QString mTitle)
         {
             this->mTitle = mTitle;
+        }
+
+        void setType(PublicationType type)
+        {
+            this->mType = type;
         }
 
         void setUrl(QString mUrl)
@@ -181,6 +205,11 @@ class Publication : public BaseEntity
         QString title() const
         {
             return mTitle;
+        }
+
+        PublicationType type() const
+        {
+            return mType;
         }
 
         QString url() const
@@ -214,6 +243,11 @@ private:
     QString mIsbn;
     QString mLocalURL;
     Author::List mAuthors;
+
+    bool mIsPublished;
+    bool mIsPeerReviewed;
+
+    PublicationType mType;
 };
 
 #endif /* PUBLICATION_H_ */

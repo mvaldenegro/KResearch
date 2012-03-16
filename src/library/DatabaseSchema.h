@@ -33,8 +33,18 @@ QStringList databaseSchema()
                   "doi TEXT,\n"
                   "isbn TEXT,\n"
                   "localURL TEXT,\n"
-                  "type INTEGER\n"
+                  "type INTEGER,\n"
+                  "isPublished BOOLEAN,\n"
+                  "isPeerReviewed BOOLEAN"
                   ");");
+
+    ret << QString("CREATE TABLE IF NOT EXISTS journal (\n"
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                   "name TEXT NOT NULL UNIQUE,\n"
+                   "publisher TEXT,\n"
+                   "url TEXT,\n"
+                   "policy INTEGER\n"
+                   ");");
 
     ret << QString("CREATE TABLE IF NOT EXISTS publication_author (\n"
                   "publicationId INTEGER,\n"

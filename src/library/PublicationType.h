@@ -21,12 +21,15 @@
 #include <QString>
 #include <QHash>
 
-class PublicationType
+#include <library/TypedEnum.h>
+
+class PT
 {
     public:
 
         enum Type
         {
+            Unknown                 = 0,
             Unpublished             = 1,
             Article                 = 2,
             ConferenceArticle       = 3,
@@ -43,20 +46,30 @@ class PublicationType
             Invalid                 = 1001
         };
 
-        PublicationType(Type value);
-        ~PublicationType();
+        static QHash<unsigned int, QString> toStringHash()
+        {
+            QHash<unsigned int, QString> ret;
 
-        QString toString() const;
+            ret.insert(Unknown                 , "Unknown");
+            ret.insert(Unpublished             , "Unpublished");
+            ret.insert(Article                 , "Article");
+            ret.insert(ConferenceArticle       , "Conference Article");
+            ret.insert(Book                    , "Book");
+            ret.insert(Booklet                 , "Booklet");
+            ret.insert(BookChapter             , "Book Chapter");
+            ret.insert(BookPart                , "Book part");
+            ret.insert(BachelorThesis          , "Bachelor Thesis");
+            ret.insert(MasterThesis            , "Master Thesis");
+            ret.insert(DoctoralThesis          , "Doctoral Thesis");
+            ret.insert(TechnicalReport         , "Technical Report");
+            ret.insert(TechnicalDocumentation  , "Technical Documentation");
+            ret.insert(OtherDocument           , "Other document type");
 
-        unsigned int toUInt() const;
+            return ret;
+        }
 
-        static PublicationType fromString(const QString& str);
-
-    private:
-
-        static QHash<unsigned int, QString> mStringHash;
-
-        Type mEnumValue;
 };
+
+typedef TypedEnum<PT> PublicationType;
 
 #endif /* PUBLICATIONTYPE_H_ */

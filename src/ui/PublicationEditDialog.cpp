@@ -49,6 +49,8 @@ PublicationEditDialog::PublicationEditDialog(Publication::Ptr pubToEdit)
     removeAuthorButton->setIcon(KIcon("list-remove"));
     localURLButton->setIcon(KIcon("document-open"));
 
+    typeComboBox->addItems(PublicationType::stringValues());
+
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
@@ -95,6 +97,9 @@ void PublicationEditDialog::fill(Publication::Ptr pub)
     doiEdit->setText(pub->doi());
     isbnEdit->setText(pub->isbn());
     localFileEdit->setText(pub->localUrl());
+
+    int index = typeComboBox->findText(pub->type().toString());
+    typeComboBox->setCurrentIndex(index);
 
     mEditWidget->setAuthorList(pub->authors());
 }
@@ -165,6 +170,7 @@ void PublicationEditDialog::save()
     mPub->setDoi(doiEdit->text());
     mPub->setIsbn(isbnEdit->text());
     mPub->setLocalUrl(localFileEdit->text());
+    mPub->setType(PublicationType::fromString(typeComboBox->currentText()));
 
     saveAuthors();
 

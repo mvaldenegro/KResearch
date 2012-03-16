@@ -69,6 +69,9 @@ Publication::Ptr SQLitePublicationDAO::findById(qulonglong id) const
             pub->setDoi(record.value("doi").toString());
             pub->setIsbn(record.value("isbn").toString());
             pub->setLocalUrl(record.value("localURL").toString());
+            pub->setType(PublicationType::fromUInt(record.value("type").toUInt()));
+            pub->setPublished(record.value("isPublished").toBool());
+            pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
 
             repository()->publications()->insert(id, pub);
 
@@ -161,9 +164,11 @@ bool SQLitePublicationDAO::save(Publication::Ptr pub)
 
     QSqlQuery query(database());
     ok &= query.prepare("INSERT INTO publication(title, abstract, year, conference, journal, publisher, "
-                                                "series, subseries, volume, number, url, doi, isbn, localURL) "
+                                                "series, subseries, volume, number, url, doi, isbn, localURL,"
+                                                "type, isPublished, isPeerReviewed) "
                          "VALUES(:title, :abstract, :year, :conference, :journal, :publisher, "
-                                ":series, :subseries, :volume, :number, :url, :doi, :isbn, :localURL)");
+                                ":series, :subseries, :volume, :number, :url, :doi, :isbn, :localURL,"
+                                ":type, :isPublished, :isPeerReviewed)");
 
     query.bindValue(":title", pub->title());
     query.bindValue(":abstract", pub->abstract());
@@ -179,6 +184,9 @@ bool SQLitePublicationDAO::save(Publication::Ptr pub)
     query.bindValue(":doi", pub->doi());
     query.bindValue(":isbn", pub->isbn());
     query.bindValue(":localURL", pub->localUrl());
+    query.bindValue(":type", pub->type().toUInt());
+    query.bindValue(":isPublished", pub->isPublished());
+    query.bindValue(":isPeerReviewed", pub->isPeerReviewed());
     ok &= query.exec();
 
     debug(query);
@@ -214,7 +222,8 @@ bool SQLitePublicationDAO::update(Publication::Ptr pub)
     QSqlQuery query(database());
     ok &= query.prepare("UPDATE publication SET title = :title, abstract = :abstract, year = :year, conference = :conference, journal = :journal,"
                         " publisher = :publisher, series = :series, subseries = :subseries, volume = :volume, number = :number, url = :url, "
-                        " doi = :doi, isbn = :isbn, localURL = :localURL WHERE id = :id");
+                        " doi = :doi, isbn = :isbn, localURL = :localURL, type = :type, isPublished = :isPublished,"
+                        " isPeerReviewed = :isPeerReviewed WHERE id = :id");
 
     query.bindValue(":id", pub->id());
     query.bindValue(":title", pub->title());
@@ -231,6 +240,9 @@ bool SQLitePublicationDAO::update(Publication::Ptr pub)
     query.bindValue(":doi", pub->doi());
     query.bindValue(":isbn", pub->isbn());
     query.bindValue(":localURL", pub->localUrl());
+    query.bindValue(":type", pub->type().toUInt());
+    query.bindValue(":isPublished", pub->isPublished());
+    query.bindValue(":isPeerReviewed", pub->isPeerReviewed());
     ok &= query.exec();
 
     debug(query);

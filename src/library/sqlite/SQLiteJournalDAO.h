@@ -19,7 +19,7 @@
 #define SQLITEJOURNALDAO_H_
 
 #include <library/dao/JournalDAO.h>
-#include <sqliteLibrary/SQLiteBaseDAO.h>
+#include <library/sqlite/SQLiteBaseDAO.h>
 
 class SQLiteRepository;
 

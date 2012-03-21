@@ -18,7 +18,7 @@
 #include "LibraryManager.h"
 #include "DatabaseSchema.h"
 
-#include <sqliteLibrary/SQLiteRepository.h>
+#include <library/sqlite/SQLiteRepository.h>
 
 #include <QDebug>
 #include <QSqlDatabase>

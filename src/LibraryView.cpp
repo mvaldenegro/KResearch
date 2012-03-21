@@ -37,7 +37,7 @@
 #include <ui/PublicationEditDialog.h>
 #include <import/PublicationImportService.h>
 #include <library/model/PublicationModel.h>
-#include <sqliteLibrary/SQLiteRepository.h>
+#include <library/sqlite/SQLiteRepository.h>
 
 LibraryView::LibraryView(QWidget *parent)
  : BaseView(parent)

@@ -16,7 +16,7 @@
  */
 
 #include "SQLiteJournalDAO.h"
-#include <sqliteLibrary/SQLiteRepository.h>
+#include <library/sqlite/SQLiteRepository.h>
 
 #include <QSqlQuery>
 #include <QSqlRecord>

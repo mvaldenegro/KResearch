@@ -19,7 +19,7 @@
 #define SQLITEAUTHORDAO_H_
 
 #include <library/dao/AuthorDAO.h>
-#include <sqliteLibrary/SQLiteBaseDAO.h>
+#include <library/sqlite/SQLiteBaseDAO.h>
 
 class SQLiteRepository;
 

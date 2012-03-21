@@ -17,9 +17,9 @@ set(kresearch_SRCS src/main.cpp src/MainWindow.cpp
                    src/library/model/PublicationModel.cpp src/library/model/AuthorModel.cpp src/library/model/JournalModel.cpp
                    src/import/PublicationImportService.cpp src/import/PDFImportWizard.cpp
                    src/import/PDFImportWizardTitlePage.cpp src/import/PDFImportWizardAuthorPage.cpp
-                   src/sqliteLibrary/SQLiteAuthorDAO.cpp src/sqliteLibrary/SQLiteRepository.cpp
-                   src/sqliteLibrary/SQLitePublicationDAO.cpp src/sqliteLibrary/SQLiteBaseDAO.cpp 
-                   src/sqliteLibrary/SQLiteJournalDAO.cpp
+                   src/library/sqlite/SQLiteAuthorDAO.cpp src/library/sqlite/SQLiteRepository.cpp
+                   src/library/sqlite/SQLitePublicationDAO.cpp src/library/sqlite/SQLiteBaseDAO.cpp 
+                   src/library/sqlite/SQLiteJournalDAO.cpp
                    src/pdfwidget/PDFDocumentWidget.cpp src/pdfwidget/PDFDocumentDialog.cpp
                    )
 

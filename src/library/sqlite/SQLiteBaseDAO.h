@@ -20,7 +20,7 @@
 
 #include <QSqlQuery>
 
-#include <sqliteLibrary/SQLiteRepository.h>
+#include <library/sqlite/SQLiteRepository.h>
 
 class SQLiteBaseDAO
 {

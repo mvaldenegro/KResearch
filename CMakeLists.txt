@@ -5,6 +5,10 @@ include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES})
 include_directories(src)
 
+if (CMAKE_COMPILER_IS_GNUCXX)
+  set ( CMAKE_CXX_FLAGS "-Wall -pedantic -Wno-long-long")
+endif ()
+
 set(kresearch_SRCS src/main.cpp src/MainWindow.cpp
                    src/ui/CollectionDockWidget.cpp src/ui/InformationDockWidget.cpp src/ui/PreviewTab.cpp
                    src/ui/PublicationEditDialog.cpp src/ui/AuthorEditWidget.cpp src/ui/ConcealedTabWidget.cpp

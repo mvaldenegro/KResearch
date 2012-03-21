@@ -22,9 +22,11 @@
 
 #include <library/Author.h>
 #include <library/Publication.h>
+#include <library/Journal.h>
 
 #include <library/dao/AuthorDAO.h>
 #include <library/dao/PublicationDAO.h>
+#include <library/dao/JournalDAO.h>
 
 #include <library/RepositoryCache.h>
 
@@ -36,6 +38,7 @@ class Repository
 
         virtual AuthorDAO * authorDAO() const = 0;
         virtual PublicationDAO * publicationDAO() const = 0;
+
 
         virtual void populate() = 0;
 
@@ -49,6 +52,11 @@ class Repository
             return mPubCache;
         }
 
+        RepositoryCache<Journal> *journals()
+        {
+            return mJournalCache;
+        }
+
         static Repository *self()
         {
             return mInstance;
@@ -60,6 +68,7 @@ class Repository
 
         RepositoryCache<Author> *mAuthorCache;
         RepositoryCache<Publication> *mPubCache;
+        RepositoryCache<Journal> *mJournalCache;
 };
 
 #endif /* REPOSITORY_H_ */

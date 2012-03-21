@@ -24,7 +24,7 @@ class QString;
 
 namespace KParts {
     class ReadOnlyPart;
-};
+}
 
 class PreviewTab : public KVBox
 {

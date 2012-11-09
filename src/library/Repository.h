@@ -38,7 +38,7 @@ class Repository
 
         virtual AuthorDAO * authorDAO() const = 0;
         virtual PublicationDAO * publicationDAO() const = 0;
-
+        virtual JournalDAO * journalDAO() const = 0;
 
         virtual void populate() = 0;
 

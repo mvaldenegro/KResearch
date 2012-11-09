@@ -21,6 +21,7 @@
 #include <QAbstractItemModel>
 
 #include <library/dao/PublicationDAO.h>
+#include <library/dao/JournalDAO.h>
 
 class PublicationImportService;
 
@@ -29,7 +30,7 @@ class PublicationModel : public QAbstractItemModel
     Q_OBJECT
 
     public:
-        PublicationModel(PublicationDAO *pubDAO);
+        PublicationModel(PublicationDAO *pubDAO, JournalDAO *journalDAO);
         virtual ~PublicationModel();
 
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -59,6 +60,7 @@ class PublicationModel : public QAbstractItemModel
         QString formatAuthors(Author::List authors) const;
 
         PublicationDAO *mPublicationDAO;
+        JournalDAO *mJournalDAO;
         PublicationImportService *mImportService;
 };
 

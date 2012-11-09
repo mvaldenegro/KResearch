@@ -17,7 +17,7 @@
 
 #include "Journal.h"
 
-Journal::Journal()
+Journal::Journal() : mPublicationCount(0)
 {
 }
 

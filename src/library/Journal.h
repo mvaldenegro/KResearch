@@ -53,6 +53,16 @@ class Journal : public BaseEntity
             return mPublisher;
         }
 
+        QString series() const
+        {
+            return mSeries;
+        }
+
+        QString subseries() const
+        {
+            return mSubseries;
+        }
+
         void setJournalPolicy(JournalPolicy mJournalPolicy)
         {
             this->mJournalPolicy = mJournalPolicy;
@@ -73,6 +83,16 @@ class Journal : public BaseEntity
             this->mPublisher = mPublisher;
         }
 
+        void setSeries(QString series)
+        {
+            mSeries = series;
+        }
+
+        void setSubseries(QString subseries)
+        {
+            mSubseries = subseries;
+        }
+
         void setUrl(QString mURL)
         {
             this->mURL = mURL;
@@ -86,6 +106,8 @@ class Journal : public BaseEntity
 private:
     QString mName;
     QString mPublisher;
+    QString mSeries;
+    QString mSubseries;
     QString mURL;
     int mPublicationCount;
     JournalPolicy mJournalPolicy;

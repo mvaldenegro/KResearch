@@ -41,6 +41,8 @@ InformationDockWidget::InformationDockWidget(QWidget *parent)
     mScrollArea->setWidgetResizable(true);
 
     setWidget(mScrollArea);
+
+    mCurrentRow = 0;
 }
 
 InformationDockWidget::~InformationDockWidget()
@@ -60,79 +62,58 @@ void InformationDockWidget::display(Publication::Ptr pub)
 
         int row = 0;
 
-        if(!pub->journal().isEmpty()) {
+        if(pub->journal()) {
+            Journal::Ptr journal = pub->journal();
 
-            mWidgetUi->metadataGridLayout->addWidget(label("Journal:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->journal()), row, 1);
+            if(!journal->name().isEmpty()) {
+                displayMetadata("Journal:", journal->name());
+            }
 
-            row++;
+            if(!journal->series().isEmpty()) {
+                displayMetadata("Series:", journal->series());
+            }
+
+            if(!journal->subseries().isEmpty()) {
+                displayMetadata("Subseries:", journal->subseries());
+            }
         }
 
         if(!pub->conference().isEmpty()) {
-
-            mWidgetUi->metadataGridLayout->addWidget(label("Conference: "), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->conference()), row, 1);
-
-            row++;
+            displayMetadata("Conference:", pub->conference());
         }
 
         if(!pub->publisher().isEmpty()) {
-
-            mWidgetUi->metadataGridLayout->addWidget(label("Published by:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->publisher()), row, 1);
-
-            row++;
-        }
-
-        if(!pub->series().isEmpty()) {
-            mWidgetUi->metadataGridLayout->addWidget(label("Series:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->series()), row, 1);
-
-            row++;
-        }
-
-        if(!pub->subseries().isEmpty()) {
-            mWidgetUi->metadataGridLayout->addWidget(label("Subseries:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->subseries()), row, 1);
-
-            row++;
+            displayMetadata("Published by:", pub->publisher());
         }
 
         if(pub->volume() > 0) {
-            mWidgetUi->metadataGridLayout->addWidget(label("Volume:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(QString::number(pub->number())), row, 1);
-
-            row++;
+            displayMetadata("Volume:", QString::number(pub->volume()));
         }
 
         if(pub->number() > 0) {
-            mWidgetUi->metadataGridLayout->addWidget(label("Number:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(QString::number(pub->number())), row, 1);
-
-            row++;
+            displayMetadata("Number:", QString::number(pub->number()));
         }
 
         if(!pub->url().isEmpty()) {
-            mWidgetUi->metadataGridLayout->addWidget(label("URL:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->url()), row, 1);
-
-            row++;
+            displayMetadata("URL:", pub->url());
         }
 
         if(!pub->doi().isEmpty()) {
-            mWidgetUi->metadataGridLayout->addWidget(label("DOI:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->doi()), row, 1);
-
-            row++;
+            displayMetadata("DOI:", pub->doi());
         }
 
         if(!pub->isbn().isEmpty()) {
-            mWidgetUi->metadataGridLayout->addWidget(label("ISBN:"), row, 0, Qt::AlignRight);
-            mWidgetUi->metadataGridLayout->addWidget(label(pub->isbn()), row, 1);
-
-            row++;
+            displayMetadata("ISBN:", pub->isbn());
         }
     }
+}
+
+void InformationDockWidget::displayMetadata(const QString& title, const QString& contents)
+{
+    mWidgetUi->metadataGridLayout->addWidget(label(title), mCurrentRow, 0, Qt::AlignRight);
+    mWidgetUi->metadataGridLayout->addWidget(label(contents), mCurrentRow, 1);
+
+    mCurrentRow++;
 }
 
 QLabel *InformationDockWidget::label(const QString& contents) const
@@ -159,4 +140,6 @@ void InformationDockWidget::clear()
             }
         }
     }
+
+    mCurrentRow = 0;
 }

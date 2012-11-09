@@ -87,10 +87,10 @@ void PublicationEditDialog::fill(Publication::Ptr pub)
     abstractTextEdit->setPlainText(pub->abstract());
     yearEdit->setText(QString::number(pub->year()));
     conferenceEdit->setText(pub->conference());
-    journalEdit->setText(pub->journal());
+    //journalEdit->setText(pub->journal());
     publisherEdit->setText(pub->publisher());
-    seriesEdit->setText(pub->series());
-    subseriesEdit->setText(pub->subseries());
+    //seriesEdit->setText(pub->series());
+    //subseriesEdit->setText(pub->subseries());
     volumeEdit->setText(QString::number(pub->volume()));
     numberEdit->setText(QString::number(pub->number()));
     urlEdit->setText(pub->url());
@@ -102,6 +102,7 @@ void PublicationEditDialog::fill(Publication::Ptr pub)
     typeComboBox->setCurrentIndex(index);
 
     mEditWidget->setAuthorList(pub->authors());
+    mEditWidget->setLocalUrl(pub->localUrl());
 }
 
 void PublicationEditDialog::setupAutocompletions()
@@ -159,11 +160,11 @@ void PublicationEditDialog::save()
     mPub->setTitle(titleEdit->text());
     mPub->setAbstract(abstractTextEdit->toPlainText());
     mPub->setYear(yearEdit->text().toInt());
-    mPub->setJournal(journalEdit->text());
+    //mPub->setJournal(journalEdit->text());
     mPub->setConference(conferenceEdit->text());
     mPub->setPublisher(publisherEdit->text());
-    mPub->setSeries(seriesEdit->text());
-    mPub->setSubseries(subseriesEdit->text());
+    //mPub->setSeries(seriesEdit->text());
+    //mPub->setSubseries(subseriesEdit->text());
     mPub->setVolume(volumeEdit->text().toInt());
     mPub->setNumber(numberEdit->text().toInt());
     mPub->setUrl(urlEdit->text());

@@ -19,6 +19,9 @@
 #include "PDFImportWizardTitlePage.h"
 #include "PDFImportWizardAuthorPage.h"
 
+#include <library/Repository.h>
+#include <library/dao/JournalDAO.h>
+
 PDFImportWizard::PDFImportWizard(Publication::Ptr pub)
 : QWizard()
 {
@@ -27,7 +30,13 @@ PDFImportWizard::PDFImportWizard(Publication::Ptr pub)
 
     setField("title", pub->title());
     setField("year", pub->year());
-    setField("journal", pub->journal());
+
+    if(pub->journal()) {
+        setField("journal", pub->journal()->name());
+    } else {
+        setField("journal", QString());
+    }
+
     setField("conference", pub->conference());
 
     mPub = pub;
@@ -51,9 +60,11 @@ bool PDFImportWizard::importPublication(Publication::Ptr pub)
         QString journal = wizard.field("journal").toString();
         QString conference = wizard.field("conference").toString();
 
+        JournalDAO *journalDAO = Repository::self()->journalDAO();
+
         pub->setTitle(title);
         pub->setYear(year);
-        pub->setJournal(journal);
+        pub->setJournal(journalDAO->findByName(journal));
         pub->setConference(conference);
 
         return true;

@@ -25,6 +25,7 @@
 
 #include "SQLiteAuthorDAO.h"
 #include "SQLitePublicationDAO.h"
+#include "SQLiteJournalDAO.h"
 
 static IDList allIDs(QSqlDatabase db, const QString& tableName)
 {
@@ -43,6 +44,7 @@ SQLiteRepository::SQLiteRepository(QSqlDatabase db)
 {
     mAuthorDAO = new SQLiteAuthorDAO(this);
     mPublicationDAO = new SQLitePublicationDAO(this);
+    mJournalDAO = new SQLiteJournalDAO(this);
 
     populate();
 }
@@ -65,6 +67,13 @@ void SQLiteRepository::populate()
         publicationDAO()->findById(pid);
     }
 
-    qDebug() << "Loaded" << authors.count() << "Authors";
-    qDebug() << "Loaded" << pubs.count() << "Publications";
+    IDList journals = allIDs(database(), "journal");
+
+    foreach(qulonglong jid, journals) {
+        journalDAO()->findById(jid);
+    }
+
+    qDebug() << "Repository: loaded" << authors.count() << "Authors";
+    qDebug() << "Repository: loaded" << pubs.count() << "Publications";
+    qDebug() << "Repository: loaded" << journals.count() << "Journals";
 }

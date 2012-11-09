@@ -25,8 +25,8 @@
 #include <QUrl>
 #include <QStringList>
 
-PublicationModel::PublicationModel(PublicationDAO *pubDAO)
-: QAbstractItemModel(), mPublicationDAO(pubDAO)
+PublicationModel::PublicationModel(PublicationDAO *pubDAO, JournalDAO *journalDAO)
+: QAbstractItemModel(), mPublicationDAO(pubDAO), mJournalDAO(journalDAO)
 {
     mImportService = new PublicationImportService(pubDAO);
 
@@ -218,7 +218,11 @@ QVariant PublicationModel::handleRead(Publication::Ptr pub, int column) const
         }
 
         case 3: {
-            return pub->journal();
+            if(pub->journal()) {
+                return pub->journal()->name();
+            } else {
+                return QString();
+            }
         }
 
         case 4: {
@@ -250,7 +254,7 @@ bool PublicationModel::handleWrite(Publication::Ptr pub, const QVariant& value, 
         }
 
         case 3: {
-            pub->setJournal(value.toString());
+            pub->setJournal(mJournalDAO->findByName(value.toString()));
 
             return true;
         }

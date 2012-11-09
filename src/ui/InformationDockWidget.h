@@ -36,6 +36,7 @@ class InformationDockWidget : public QDockWidget
 
     public Q_SLOTS:
         void display(Publication::Ptr pub);
+        void displayMetadata(const QString& title, const QString& content);
 
     protected:
         QLabel *label(const QString& contents) const;
@@ -45,6 +46,8 @@ class InformationDockWidget : public QDockWidget
         QScrollArea *mScrollArea;
         QWidget *mWidget;
         Ui::PublicationInformation *mWidgetUi;
+
+        size_t mCurrentRow;
 };
 
 #endif /* INFORMATIONDOCKWIDGET_H_ */

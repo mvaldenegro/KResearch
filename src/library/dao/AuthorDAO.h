@@ -18,23 +18,19 @@
 #ifndef AUTHORDAO_H_
 #define AUTHORDAO_H_
 
+#include <library/dao/GenericDAO.h>
 #include <library/dao/BaseDAO.h>
 #include <library/Author.h>
 
 #include <QStringList>
 
-class AuthorDAO : public BaseDAO
+class AuthorDAO : public BaseDAO, public GenericDAO<Author>
 {
     public:
         AuthorDAO();
         virtual ~AuthorDAO();
 
-        virtual Author::Ptr findById(qulonglong id) const = 0;
         virtual Author::Ptr findByFullName(const QString& firstName, const QString& lastName) const = 0;
-
-        virtual bool saveOrUpdate(Author::Ptr author) = 0;
-
-        virtual Author::List findAll() const = 0;
 
         virtual QStringList authorNames() const = 0;
 };

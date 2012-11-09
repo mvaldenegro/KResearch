@@ -21,6 +21,7 @@
 #include <library/BaseEntity.h>
 #include <library/Author.h>
 #include <library/PublicationType.h>
+#include <library/Journal.h>
 
 #include <QStringList>
 #include <QString>
@@ -72,7 +73,7 @@ class Publication : public BaseEntity
             return mIsbn;
         }
 
-        QString journal() const
+        Journal::Ptr journal() const
         {
             return mJournal;
         }
@@ -102,11 +103,6 @@ class Publication : public BaseEntity
             return mIsPublished;
         }
 
-        QString series() const
-        {
-            return mSeries;
-        }
-
         void setAbstract(QString mAbstract)
         {
             this->mAbstract = mAbstract;
@@ -132,9 +128,9 @@ class Publication : public BaseEntity
             this->mIsbn = mIsbn;
         }
 
-        void setJournal(QString mJournal)
+        void setJournal(Journal::Ptr journal)
         {
-            this->mJournal = mJournal;
+            this->mJournal = journal;
         }
 
         void setLocalUrl(QString mLocalURL)
@@ -162,16 +158,6 @@ class Publication : public BaseEntity
             this->mIsPublished = published;
         }
 
-        void setSeries(QString mSeries)
-        {
-            this->mSeries = mSeries;
-        }
-
-        void setSubseries(QString mSubseries)
-        {
-            this->mSubseries = mSubseries;
-        }
-
         void setTitle(QString mTitle)
         {
             this->mTitle = mTitle;
@@ -195,11 +181,6 @@ class Publication : public BaseEntity
         void setYear(int mYear)
         {
             this->mYear = mYear;
-        }
-
-        QString subseries() const
-        {
-            return mSubseries;
         }
 
         QString title() const
@@ -232,10 +213,7 @@ private:
     QString mAbstract;
     int mYear;
     QString mConference;
-    QString mJournal;
     QString mPublisher;
-    QString mSeries;
-    QString mSubseries;
     int mVolume;
     int mNumber;
     QString mUrl;
@@ -248,6 +226,7 @@ private:
     bool mIsPeerReviewed;
 
     PublicationType mType;
+    Journal::Ptr mJournal;
 };
 
 #endif /* PUBLICATION_H_ */

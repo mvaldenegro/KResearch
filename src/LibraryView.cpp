@@ -60,7 +60,7 @@ LibraryView::LibraryView(QWidget *parent)
 
     configureTableView(mArticleView);
 
-    mArticleView->setModel(new PublicationModel(Repository::self()->publicationDAO()));
+    mArticleView->setModel(new PublicationModel(Repository::self()->publicationDAO(), Repository::self()->journalDAO()));
     mArticleView->setAcceptDrops(true);
 
 

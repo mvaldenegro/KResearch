@@ -18,7 +18,7 @@
 #include "Publication.h"
 
 Publication::Publication()
-: BaseEntity(), mYear(0), mVolume(0), mNumber(0)
+: BaseEntity(), mYear(0), mVolume(0), mNumber(0), mJournal(0), mIsPublished(false), mIsPeerReviewed(false)
 {
 }
 

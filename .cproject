@@ -28,6 +28,7 @@
 									<listOptionValue builtIn="false" value="/usr/include/KDE"/>
 									<listOptionValue builtIn="false" value="/usr/include/QtCore"/>
 									<listOptionValue builtIn="false" value="/usr/include/QtSql"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/KResearch/src}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.907259310" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>

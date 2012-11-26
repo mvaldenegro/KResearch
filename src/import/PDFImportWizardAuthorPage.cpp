@@ -58,12 +58,13 @@ bool PDFImportWizardAuthorPage::validatePage()
 
     foreach(QString authorStr, authors) {
 
-        QStringList parts = authorStr.split(',');
+        QStringList partsComma = authorStr.split(',');
+
         Author::Ptr candidate = 0;
 
-        if(parts.size() > 1) {
-            QString lastName = parts[0].trimmed();
-            QString firstName = parts[1].trimmed();
+        if(partsComma.size() > 1) {
+            QString lastName = partsComma[0].trimmed();
+            QString firstName = partsComma[1].trimmed();
 
             candidate = Repository::self()->authorDAO()->findByFullName(firstName, lastName);
 
@@ -76,9 +77,7 @@ bool PDFImportWizardAuthorPage::validatePage()
             }
 
         } else {
-            QString name = parts[0].trimmed();
-
-            candidate = Repository::self()->authorDAO()->findByFullName(name, QString());
+            return false;
         }
 
         authList.append(candidate);

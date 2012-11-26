@@ -48,6 +48,7 @@ class AuthorEditWidget : public QWidget, public Ui::AuthorEdit
 
     protected:
         bool authorExists(const QString& fullName);
+        QString normalizeName(const QString& name) const;
 
     private:
         QString mLocalUrl;

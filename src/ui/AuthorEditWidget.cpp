@@ -75,9 +75,11 @@ void AuthorEditWidget::addAuthor()
 
 void AuthorEditWidget::addAuthor(const QString& name)
 {
-    if(!authorExists(name)) {
+    QString normName = normalizeName(name);
 
-        authorList->addItem(name);
+    if(!authorExists(normName)) {
+
+        authorList->addItem(normName);
         authorComboBox->setEditText(QString());
     }
 }
@@ -105,4 +107,23 @@ void AuthorEditWidget::acquireAuthor()
 bool AuthorEditWidget::authorExists(const QString& name)
 {
     return currentAuthorList().contains(name);
+}
+
+QString AuthorEditWidget::normalizeName(const QString& name) const
+{
+    QStringList partsComma = name.split(',');
+    QStringList partsSpace = name.split(' ');
+
+    QString firstName, lastName;
+
+    if(partsComma.count() == 2) {
+        firstName = partsComma[1].trimmed();
+        lastName = partsComma[0].trimmed();
+
+    } else if(partsSpace.count() == 2) {
+        firstName = partsSpace[0].trimmed();
+        lastName = partsSpace[1].trimmed();
+    }
+
+    return lastName + ", " + firstName;
 }

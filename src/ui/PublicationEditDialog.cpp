@@ -27,7 +27,7 @@
 #include <KIcon>
 #include <KFileDialog>
 
-PublicationEditDialog::PublicationEditDialog(Publication::Ptr pubToEdit)
+PublicationEditDialog::PublicationEditDialog(Document::Ptr pubToEdit)
  : QDialog(), mPub(pubToEdit)
 {
     setupUi(this);
@@ -49,7 +49,7 @@ PublicationEditDialog::PublicationEditDialog(Publication::Ptr pubToEdit)
     removeAuthorButton->setIcon(KIcon("list-remove"));
     localURLButton->setIcon(KIcon("document-open"));
 
-    typeComboBox->addItems(PublicationType::stringValues());
+    typeComboBox->addItems(DocumentType::stringValues());
 
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
@@ -81,7 +81,7 @@ PublicationEditDialog::~PublicationEditDialog()
 {
 }
 
-void PublicationEditDialog::fill(Publication::Ptr pub)
+void PublicationEditDialog::fill(Document::Ptr pub)
 {
     titleEdit->setText(pub->title());
     abstractTextEdit->setPlainText(pub->abstract());
@@ -139,7 +139,7 @@ void PublicationEditDialog::saveAuthors()
     mPub->setAuthors(authList);
 }
 
-Publication::Ptr PublicationEditDialog::editPublication(Publication::Ptr pub)
+Document::Ptr PublicationEditDialog::editPublication(Document::Ptr pub)
 {
     PublicationEditDialog dialog(pub);
 
@@ -171,7 +171,7 @@ void PublicationEditDialog::save()
     mPub->setDoi(doiEdit->text());
     mPub->setIsbn(isbnEdit->text());
     mPub->setLocalUrl(localFileEdit->text());
-    mPub->setType(PublicationType::fromString(typeComboBox->currentText()));
+    mPub->setType(DocumentType::fromString(typeComboBox->currentText()));
 
     saveAuthors();
 

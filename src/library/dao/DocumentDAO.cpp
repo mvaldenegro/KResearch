@@ -15,14 +15,14 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PublicationDAO.h"
+#include "DocumentDAO.h"
 
-PublicationDAO::PublicationDAO()
+DocumentDAO::DocumentDAO()
  : BaseDAO()
 {
 }
 
-PublicationDAO::~PublicationDAO()
+DocumentDAO::~DocumentDAO()
 {
 }
 

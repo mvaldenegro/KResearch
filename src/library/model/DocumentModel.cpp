@@ -15,7 +15,7 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PublicationModel.h"
+#include "DocumentModel.h"
 
 #include <import/PublicationImportService.h>
 
@@ -25,7 +25,7 @@
 #include <QUrl>
 #include <QStringList>
 
-PublicationModel::PublicationModel(PublicationDAO *pubDAO, JournalDAO *journalDAO)
+DocumentModel::DocumentModel(DocumentDAO *pubDAO, JournalDAO *journalDAO)
 : QAbstractItemModel(), mPublicationDAO(pubDAO), mJournalDAO(journalDAO)
 {
     mImportService = new PublicationImportService(pubDAO);
@@ -33,24 +33,24 @@ PublicationModel::PublicationModel(PublicationDAO *pubDAO, JournalDAO *journalDA
     connect(pubDAO, SIGNAL(dataChanged()), this, SLOT(invalidateData()));
 }
 
-PublicationModel::~PublicationModel()
+DocumentModel::~DocumentModel()
 {
 }
 
-int PublicationModel::columnCount(const QModelIndex& parent) const
+int DocumentModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
 
     return 5;
 }
 
-int PublicationModel::rowCount(const QModelIndex& parent) const
+int DocumentModel::rowCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
 
     return mPublicationDAO->findAll().count();
 }
-QVariant PublicationModel::data(const QModelIndex& index, int role) const
+QVariant DocumentModel::data(const QModelIndex& index, int role) const
 {
     if(!index.isValid()) {
         return QVariant();
@@ -63,7 +63,7 @@ QVariant PublicationModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    Publication::Ptr pub = mPublicationDAO->findAll().at(index.row());
+    Document::Ptr pub = mPublicationDAO->findAll().at(index.row());
 
     if(role == Qt::DisplayRole) {
         return handleRead(pub, j);
@@ -76,11 +76,11 @@ QVariant PublicationModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-bool PublicationModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool DocumentModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if(index.isValid() && role == Qt::EditRole) {
 
-        Publication::Ptr pub = mPublicationDAO->findAll().at(index.row());
+        Document::Ptr pub = mPublicationDAO->findAll().at(index.row());
         bool ok = handleWrite(pub, value, index.column());
 
         if(ok) {
@@ -95,7 +95,7 @@ bool PublicationModel::setData(const QModelIndex& index, const QVariant& value, 
     return false;
 }
 
-QVariant PublicationModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant DocumentModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if(orientation != Qt::Horizontal) {
         return QVariant();
@@ -108,7 +108,7 @@ QVariant PublicationModel::headerData(int section, Qt::Orientation orientation, 
     return handleColumnNames(section);
 }
 
-QModelIndex PublicationModel::index(int row, int column, const QModelIndex& parent) const
+QModelIndex DocumentModel::index(int row, int column, const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
 
@@ -116,19 +116,19 @@ QModelIndex PublicationModel::index(int row, int column, const QModelIndex& pare
     return createIndex(row, column, (void *) 0);
 }
 
-QModelIndex PublicationModel::parent(const QModelIndex& index) const
+QModelIndex DocumentModel::parent(const QModelIndex& index) const
 {
     Q_UNUSED(index);
 
     return QModelIndex();
 }
 
-Qt::DropActions PublicationModel::supportedDropActions() const
+Qt::DropActions DocumentModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
-Qt::ItemFlags PublicationModel::flags(const QModelIndex &index) const
+Qt::ItemFlags DocumentModel::flags(const QModelIndex &index) const
 {
     Q_UNUSED(index)
 
@@ -136,7 +136,7 @@ Qt::ItemFlags PublicationModel::flags(const QModelIndex &index) const
     //return Qt::ItemIsDropEnabled | Qt::ItemIsEnabled;
 }
 
-bool PublicationModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
+bool DocumentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                                     int row, int column, const QModelIndex& parent)
 {
     Q_UNUSED(row)
@@ -164,18 +164,18 @@ bool PublicationModel::dropMimeData(const QMimeData *data, Qt::DropAction action
     return true;
 }
 
-QStringList PublicationModel::mimeTypes() const
+QStringList DocumentModel::mimeTypes() const
 {
     return QStringList() << "text/uri-list";
 }
 
-void PublicationModel::invalidateData()
+void DocumentModel::invalidateData()
 {
     beginResetModel();
     endResetModel();
 }
 
-QVariant PublicationModel::handleColumnNames(int column) const
+QVariant DocumentModel::handleColumnNames(int column) const
 {
     switch(column) {
         case 0: {
@@ -202,7 +202,7 @@ QVariant PublicationModel::handleColumnNames(int column) const
     return QVariant();
 }
 
-QVariant PublicationModel::handleRead(Publication::Ptr pub, int column) const
+QVariant DocumentModel::handleRead(Document::Ptr pub, int column) const
 {
     switch(column) {
         case 0: {
@@ -233,7 +233,7 @@ QVariant PublicationModel::handleRead(Publication::Ptr pub, int column) const
     return QVariant();
 }
 
-bool PublicationModel::handleWrite(Publication::Ptr pub, const QVariant& value, int column)
+bool DocumentModel::handleWrite(Document::Ptr pub, const QVariant& value, int column)
 {
     switch(column) {
         case 0: {
@@ -269,7 +269,7 @@ bool PublicationModel::handleWrite(Publication::Ptr pub, const QVariant& value, 
     return false;
 }
 
-QString PublicationModel::formatAuthors(Author::List authors) const
+QString DocumentModel::formatAuthors(Author::List authors) const
 {
     QStringList authorsList;
 

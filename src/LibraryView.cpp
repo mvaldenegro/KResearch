@@ -36,7 +36,7 @@
 
 #include <ui/PublicationEditDialog.h>
 #include <import/PublicationImportService.h>
-#include <library/model/PublicationModel.h>
+#include <library/model/DocumentModel.h>
 #include <library/sqlite/SQLiteRepository.h>
 
 LibraryView::LibraryView(QWidget *parent)
@@ -60,11 +60,11 @@ LibraryView::LibraryView(QWidget *parent)
 
     configureTableView(mArticleView);
 
-    mArticleView->setModel(new PublicationModel(Repository::self()->publicationDAO(), Repository::self()->journalDAO()));
+    mArticleView->setModel(new DocumentModel(Repository::self()->publicationDAO(), Repository::self()->journalDAO()));
     mArticleView->setAcceptDrops(true);
 
 
-    mSelectedPub = Publication::Ptr(0);
+    mSelectedPub = Document::Ptr(0);
 
     loadConfig();
 }
@@ -131,7 +131,7 @@ void LibraryView::clicked(const QModelIndex &idx)
         return;
     }
 
-    Publication::Ptr pub = Repository::self()->publications()->findAll().at(idx.row());
+    Document::Ptr pub = Repository::self()->publications()->findAll().at(idx.row());
 
     if(pub != 0) {
 

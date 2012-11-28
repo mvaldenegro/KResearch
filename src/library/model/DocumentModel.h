@@ -20,18 +20,18 @@
 
 #include <QAbstractItemModel>
 
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 #include <library/dao/JournalDAO.h>
 
 class PublicationImportService;
 
-class PublicationModel : public QAbstractItemModel
+class DocumentModel : public QAbstractItemModel
 {
     Q_OBJECT
 
     public:
-        PublicationModel(PublicationDAO *pubDAO, JournalDAO *journalDAO);
-        virtual ~PublicationModel();
+        DocumentModel(DocumentDAO *pubDAO, JournalDAO *journalDAO);
+        virtual ~DocumentModel();
 
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
         virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -55,11 +55,11 @@ class PublicationModel : public QAbstractItemModel
     private:
 
         QVariant handleColumnNames(int column) const;
-        QVariant handleRead(Publication::Ptr pub, int column) const;
-        bool handleWrite(Publication::Ptr pub, const QVariant& value, int column);
+        QVariant handleRead(Document::Ptr pub, int column) const;
+        bool handleWrite(Document::Ptr pub, const QVariant& value, int column);
         QString formatAuthors(Author::List authors) const;
 
-        PublicationDAO *mPublicationDAO;
+        DocumentDAO *mPublicationDAO;
         JournalDAO *mJournalDAO;
         PublicationImportService *mImportService;
 };

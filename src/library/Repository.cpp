@@ -22,7 +22,7 @@ Repository *Repository::mInstance = 0;
 Repository::Repository()
 {
     mAuthorCache = new RepositoryCache<Author>();
-    mPubCache = new RepositoryCache<Publication>();
+    mPubCache = new RepositoryCache<Document>();
     mJournalCache = new RepositoryCache<Journal>();
 
     mInstance = this;

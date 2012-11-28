@@ -21,11 +21,11 @@
 #include <QSharedPointer>
 
 #include <library/Author.h>
-#include <library/Publication.h>
+#include <library/Document.h>
 #include <library/Journal.h>
 
 #include <library/dao/AuthorDAO.h>
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 #include <library/dao/JournalDAO.h>
 
 #include <library/RepositoryCache.h>
@@ -37,7 +37,7 @@ class Repository
         virtual ~Repository();
 
         virtual AuthorDAO * authorDAO() const = 0;
-        virtual PublicationDAO * publicationDAO() const = 0;
+        virtual DocumentDAO * publicationDAO() const = 0;
         virtual JournalDAO * journalDAO() const = 0;
 
         virtual void populate() = 0;
@@ -47,7 +47,7 @@ class Repository
             return mAuthorCache;
         }
 
-        RepositoryCache<Publication>* publications()
+        RepositoryCache<Document>* publications()
         {
             return mPubCache;
         }
@@ -67,7 +67,7 @@ class Repository
         static Repository *mInstance;
 
         RepositoryCache<Author> *mAuthorCache;
-        RepositoryCache<Publication> *mPubCache;
+        RepositoryCache<Document> *mPubCache;
         RepositoryCache<Journal> *mJournalCache;
 };
 

@@ -20,7 +20,7 @@
 
 #include <KUrl>
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 
 /*! This is the common interface to all document importers.
@@ -38,12 +38,12 @@ class DocumentImporter
         /*! Imports a local file.
          *
          */
-        virtual Publication::List import(const QString& localFilename) const = 0;
+        virtual Document::List import(const QString& localFilename) const = 0;
 
         /*! Imports a URL.
          *
          */
-        virtual Publication::List import(const KUrl& url) const = 0;
+        virtual Document::List import(const KUrl& url) const = 0;
 };
 
 #endif /* DOCUMENTIMPORTER_H_ */

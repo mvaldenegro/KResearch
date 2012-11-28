@@ -18,12 +18,12 @@
 #include "PublicationImportService.h"
 
 #include <import/PDFImportWizard.h>
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 
 #include <QFileInfo>
 #include <QDebug>
 
-PublicationImportService::PublicationImportService(PublicationDAO *pubDAO)
+PublicationImportService::PublicationImportService(DocumentDAO *pubDAO)
 : mPubDAO(pubDAO)
 {
 }
@@ -44,7 +44,7 @@ bool PublicationImportService::import(const QString& fileName)
 
     if(isAcceptedSuffix(info.completeSuffix())) {
 
-        Publication::Ptr pub(new Publication());
+        Document::Ptr pub(new Document());
 
         pub->setTitle(info.baseName());
         pub->setLocalUrl(fileName);

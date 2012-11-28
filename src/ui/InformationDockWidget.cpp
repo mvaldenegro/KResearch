@@ -49,7 +49,7 @@ InformationDockWidget::~InformationDockWidget()
 {
 }
 
-void InformationDockWidget::display(Publication::Ptr pub)
+void InformationDockWidget::display(Document::Ptr pub)
 {
     if(pub) {
         qDebug() << pub->title() << "selected";

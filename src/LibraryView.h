@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 #include "BaseView.h"
 
@@ -39,7 +39,7 @@ class LibraryView : public BaseView
         LibraryView(QWidget *parent = 0);
         virtual ~LibraryView();
 
-        Publication::Ptr selectedPublication() const
+        Document::Ptr selectedPublication() const
         {
             return mSelectedPub;
         }
@@ -53,7 +53,7 @@ class LibraryView : public BaseView
 
     signals:
         void activated(const QString& fileName);
-        void selected(Publication::Ptr pub);
+        void selected(Document::Ptr pub);
 
     protected Q_SLOTS:
         void activated(const QModelIndex& idx);
@@ -66,7 +66,7 @@ class LibraryView : public BaseView
         QTableView *mArticleView;
         KLineEdit *mSearchEdit;
 
-        Publication::Ptr mSelectedPub;
+        Document::Ptr mSelectedPub;
 };
 
 #endif /* CENTRALVIEW_H_ */

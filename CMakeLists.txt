@@ -14,15 +14,15 @@ set(kresearch_SRCS src/main.cpp src/MainWindow.cpp
                    src/ui/PublicationEditDialog.cpp src/ui/AuthorEditWidget.cpp src/ui/ConcealedTabWidget.cpp
                    src/LibraryView.cpp src/BaseView.cpp src/AuthorView.cpp src/JournalView.cpp
                    src/library/LibraryManager.cpp
-                   src/library/Author.cpp src/library/Publication.cpp src/library/Journal.cpp src/library/BaseEntity.cpp
+                   src/library/Author.cpp src/library/Document.cpp src/library/Journal.cpp src/library/BaseEntity.cpp
                    src/library/Repository.cpp
-                   src/library/dao/AuthorDAO.cpp src/library/dao/PublicationDAO.cpp src/library/dao/BaseDAO.cpp
+                   src/library/dao/AuthorDAO.cpp src/library/dao/DocumentDAO.cpp src/library/dao/BaseDAO.cpp
                    src/library/dao/JournalDAO.cpp
-                   src/library/model/PublicationModel.cpp src/library/model/AuthorModel.cpp src/library/model/JournalModel.cpp
+                   src/library/model/DocumentModel.cpp src/library/model/AuthorModel.cpp src/library/model/JournalModel.cpp
                    src/import/PublicationImportService.cpp src/import/PDFImportWizard.cpp
                    src/import/PDFImportWizardTitlePage.cpp src/import/PDFImportWizardAuthorPage.cpp
                    src/library/sqlite/SQLiteAuthorDAO.cpp src/library/sqlite/SQLiteRepository.cpp
-                   src/library/sqlite/SQLitePublicationDAO.cpp src/library/sqlite/SQLiteBaseDAO.cpp 
+                   src/library/sqlite/SQLiteDocumentDAO.cpp src/library/sqlite/SQLiteBaseDAO.cpp 
                    src/library/sqlite/SQLiteJournalDAO.cpp
                    src/pdfwidget/PDFDocumentWidget.cpp src/pdfwidget/PDFDocumentDialog.cpp
                    )

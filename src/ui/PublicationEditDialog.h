@@ -20,7 +20,7 @@
 
 #include "ui_PublicationEdit.h"
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 #include <QDialog>
 
@@ -32,10 +32,10 @@ class PublicationEditDialog : public QDialog, public Ui_PublicationEditor
     Q_OBJECT
 
     public:
-        PublicationEditDialog(Publication::Ptr pubToEdit);
+        PublicationEditDialog(Document::Ptr pubToEdit);
         virtual ~PublicationEditDialog();
 
-        static Publication::Ptr editPublication(Publication::Ptr pub);
+        static Document::Ptr editPublication(Document::Ptr pub);
 
     protected Q_SLOTS:
         void selectLocalURL();
@@ -55,14 +55,14 @@ class PublicationEditDialog : public QDialog, public Ui_PublicationEditor
 
 
     protected:
-        void fill(Publication::Ptr pub);
+        void fill(Document::Ptr pub);
         void setupAutocompletions();
         void saveAuthors();
 
     private:
         AuthorEditWidget *mEditWidget;
 
-        Publication::Ptr mPub;
+        Document::Ptr mPub;
 };
 
 #endif /* PUBLICATIONEDITDIALOG_H_ */

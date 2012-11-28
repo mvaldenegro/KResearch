@@ -22,7 +22,7 @@
 #include <library/Repository.h>
 #include <library/dao/JournalDAO.h>
 
-PDFImportWizard::PDFImportWizard(Publication::Ptr pub)
+PDFImportWizard::PDFImportWizard(Document::Ptr pub)
 : QWizard()
 {
     addPage(new PDFImportWizardTitlePage());
@@ -48,7 +48,7 @@ PDFImportWizard::~PDFImportWizard()
 {
 }
 
-bool PDFImportWizard::importPublication(Publication::Ptr pub)
+bool PDFImportWizard::importPublication(Document::Ptr pub)
 {
     PDFImportWizard wizard(pub);
     int exec = wizard.exec();

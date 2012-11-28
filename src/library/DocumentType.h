@@ -70,6 +70,6 @@ class PT
 
 };
 
-typedef TypedEnum<PT> PublicationType;
+typedef TypedEnum<PT> DocumentType;
 
 #endif /* PUBLICATIONTYPE_H_ */

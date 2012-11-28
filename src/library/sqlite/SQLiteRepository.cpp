@@ -24,7 +24,7 @@
 #include <QDebug>
 
 #include "SQLiteAuthorDAO.h"
-#include "SQLitePublicationDAO.h"
+#include "SQLiteDocumentDAO.h"
 #include "SQLiteJournalDAO.h"
 
 static IDList allIDs(QSqlDatabase db, const QString& tableName)
@@ -43,7 +43,7 @@ SQLiteRepository::SQLiteRepository(QSqlDatabase db)
 : mDB(db)
 {
     mAuthorDAO = new SQLiteAuthorDAO(this);
-    mPublicationDAO = new SQLitePublicationDAO(this);
+    mPublicationDAO = new SQLiteDocumentDAO(this);
     mJournalDAO = new SQLiteJournalDAO(this);
 
     populate();

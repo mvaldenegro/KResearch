@@ -21,19 +21,19 @@
 #include <QStringList>
 
 #include <library/dao/BaseDAO.h>
-#include <library/Publication.h>
+#include <library/Document.h>
 
-class PublicationDAO : public BaseDAO
+class DocumentDAO : public BaseDAO
 {
     public:
-        PublicationDAO();
-        virtual ~PublicationDAO();
+        DocumentDAO();
+        virtual ~DocumentDAO();
 
-        virtual Publication::Ptr findById(qulonglong id) const = 0;
+        virtual Document::Ptr findById(qulonglong id) const = 0;
 
-        virtual bool saveOrUpdate(Publication::Ptr pub) = 0;
+        virtual bool saveOrUpdate(Document::Ptr pub) = 0;
 
-        virtual Publication::List findAll() const = 0;
+        virtual Document::List findAll() const = 0;
 
         virtual QStringList journals() const = 0;
         virtual QStringList conferences() const = 0;

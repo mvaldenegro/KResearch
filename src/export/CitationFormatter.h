@@ -18,7 +18,7 @@
 #ifndef CITATIONFORMATTER_H_
 #define CITATIONFORMATTER_H_
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 
 /*! Interface for citation formatters.
@@ -33,7 +33,7 @@ class CitationFormatter
 
         /*! Format a citation, and return the result as a QString.
          */
-        virtual QString format(const Publication::Ptr& publication) const;
+        virtual QString format(const Document::Ptr& publication) const;
 };
 
 #endif /* CITATIONFORMATTER_H_ */

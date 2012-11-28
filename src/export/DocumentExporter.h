@@ -18,7 +18,7 @@
 #ifndef DOCUMENTEXPORTER_H_
 #define DOCUMENTEXPORTER_H_
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 #include <QByteArray>
 
@@ -34,7 +34,7 @@ class DocumentExporter
 
         /*! Exports a list of Documents and returns a QByteArray containing the contents of the export.
          */
-        virtual QByteArray exportDocuments(const Publication::List &pubss) const = 0;
+        virtual QByteArray exportDocuments(const Document::List &pubss) const = 0;
 };
 
 #endif /* DOCUMENTEXPORTER_H_ */

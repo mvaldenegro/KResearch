@@ -162,7 +162,7 @@ void MainWindow::setupDockWidgets()
     addDockWidget(Qt::LeftDockWidgetArea, mLeftDock);
     addDockWidget(Qt::RightDockWidgetArea, mRightDock);
 
-    connect(mLibraryView, SIGNAL(selected(Publication::Ptr)), mRightDock, SLOT(display(Publication::Ptr)));
+    connect(mLibraryView, SIGNAL(selected(Document::Ptr)), mRightDock, SLOT(display(Document::Ptr)));
 
     connect(mLeftDock, SIGNAL(changeView(const QString&)), this, SLOT(switchView(const QString&)));
 }

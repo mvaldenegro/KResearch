@@ -31,7 +31,7 @@ class PythonSearchImporterPlugin : public OnlineSearchImporter
         PythonSearchImporterPlugin();
         virtual ~PythonSearchImporterPlugin();
 
-        virtual Publication::List search(const QStringList& keywords) const;
+        virtual Document::List search(const QStringList& keywords) const;
 };
 
 #endif /* PYTHONSEARCHIMPORTERPLUGIN_H_ */

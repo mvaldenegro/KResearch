@@ -15,14 +15,14 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Publication.h"
+#include "Document.h"
 
-Publication::Publication()
+Document::Document()
 : BaseEntity(), mYear(0), mVolume(0), mNumber(0), mJournal(0), mIsPublished(false), mIsPeerReviewed(false)
 {
 }
 
-Publication::~Publication()
+Document::~Document()
 {
 }
 

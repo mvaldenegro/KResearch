@@ -20,7 +20,7 @@
 
 #include <QDockWidget>
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
 #include "ui_PublicationInformation.h"
 
@@ -35,7 +35,7 @@ class InformationDockWidget : public QDockWidget
         virtual ~InformationDockWidget();
 
     public Q_SLOTS:
-        void display(Publication::Ptr pub);
+        void display(Document::Ptr pub);
         void displayMetadata(const QString& title, const QString& content);
 
     protected:

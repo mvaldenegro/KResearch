@@ -20,14 +20,14 @@
 
 #include <QString>
 
-#include <library/Publication.h>
+#include <library/Document.h>
 
-class PublicationDAO;
+class DocumentDAO;
 
 class PublicationImportService
 {
     public:
-        PublicationImportService(PublicationDAO *pubDAO);
+        PublicationImportService(DocumentDAO *pubDAO);
         virtual ~PublicationImportService();
 
         bool import(const QString& fileName);
@@ -35,13 +35,13 @@ class PublicationImportService
     protected:
         bool isAcceptedSuffix(const QString& suffix) const;
 
-        PublicationDAO *publicationDAO() const
+        DocumentDAO *publicationDAO() const
         {
             return mPubDAO;
         }
 
     private:
-        PublicationDAO *mPubDAO;
+        DocumentDAO *mPubDAO;
 };
 
 #endif /* IMPORTSERVICE_H_ */

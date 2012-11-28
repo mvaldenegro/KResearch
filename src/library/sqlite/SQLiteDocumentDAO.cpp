@@ -15,7 +15,7 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "SQLitePublicationDAO.h"
+#include "SQLiteDocumentDAO.h"
 #include <library/sqlite/SQLiteRepository.h>
 
 #include <QSqlQuery>
@@ -23,16 +23,16 @@
 #include <QVariant>
 #include <QDebug>
 
-SQLitePublicationDAO::SQLitePublicationDAO(SQLiteRepository *cache)
-: PublicationDAO(), SQLiteBaseDAO(cache)
+SQLiteDocumentDAO::SQLiteDocumentDAO(SQLiteRepository *cache)
+: DocumentDAO(), SQLiteBaseDAO(cache)
 {
 }
 
-SQLitePublicationDAO::~SQLitePublicationDAO()
+SQLiteDocumentDAO::~SQLiteDocumentDAO()
 {
 }
 
-Publication::Ptr SQLitePublicationDAO::findById(qulonglong id) const
+Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
 {
     if(repository()->publications()->contains(id)) {
         return repository()->publications()->find(id);
@@ -52,7 +52,7 @@ Publication::Ptr SQLitePublicationDAO::findById(qulonglong id) const
 
             QSqlRecord record = query.record();
             qulonglong id = record.value("id").toULongLong();
-            Publication::Ptr pub = Publication::Ptr(new Publication());
+            Document::Ptr pub = Document::Ptr(new Document());
 
             pub->setId(id);
             pub->setTitle(record.value("title").toString());
@@ -66,7 +66,7 @@ Publication::Ptr SQLitePublicationDAO::findById(qulonglong id) const
             pub->setDoi(record.value("doi").toString());
             pub->setIsbn(record.value("isbn").toString());
             pub->setLocalUrl(record.value("localURL").toString());
-            pub->setType(PublicationType::fromUInt(record.value("type").toUInt()));
+            pub->setType(DocumentType::fromUInt(record.value("type").toUInt()));
             pub->setPublished(record.value("isPublished").toBool());
             pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
 
@@ -93,10 +93,10 @@ Publication::Ptr SQLitePublicationDAO::findById(qulonglong id) const
         }
     }
 
-    return Publication::Ptr();
+    return Document::Ptr();
 }
 
-bool SQLitePublicationDAO::saveOrUpdate(Publication::Ptr pub)
+bool SQLiteDocumentDAO::saveOrUpdate(Document::Ptr pub)
 {
     if(!pub) {
         return false;
@@ -113,12 +113,12 @@ bool SQLitePublicationDAO::saveOrUpdate(Publication::Ptr pub)
     }
 }
 
-Publication::List SQLitePublicationDAO::findAll() const
+Document::List SQLiteDocumentDAO::findAll() const
 {
     return repository()->publications()->findAll();
 }
 
-QStringList SQLitePublicationDAO::journals() const
+QStringList SQLiteDocumentDAO::journals() const
 {
     QSqlQuery query(database());
     query.prepare("SELECT DISTINCT journal FROM publication");
@@ -137,7 +137,7 @@ QStringList SQLitePublicationDAO::journals() const
     return ret;
 }
 
-QStringList SQLitePublicationDAO::conferences() const
+QStringList SQLiteDocumentDAO::conferences() const
 {
     QSqlQuery query(database());
     query.prepare("SELECT DISTINCT conference FROM publication");
@@ -156,7 +156,7 @@ QStringList SQLitePublicationDAO::conferences() const
     return ret;
 }
 
-bool SQLitePublicationDAO::save(Publication::Ptr pub)
+bool SQLiteDocumentDAO::save(Document::Ptr pub)
 {
     if(!pub) {
         return false;
@@ -219,7 +219,7 @@ bool SQLitePublicationDAO::save(Publication::Ptr pub)
     return ok;
 }
 
-bool SQLitePublicationDAO::update(Publication::Ptr pub)
+bool SQLiteDocumentDAO::update(Document::Ptr pub)
 {
     if(!pub) {
         return false;
@@ -268,7 +268,7 @@ bool SQLitePublicationDAO::update(Publication::Ptr pub)
     return ok;
 }
 
-bool SQLitePublicationDAO::updateAuthors(Publication::Ptr pub)
+bool SQLiteDocumentDAO::updateAuthors(Document::Ptr pub)
 {
     foreach(Author::Ptr author, pub->authors()) {
         repository()->authorDAO()->saveOrUpdate(author);
@@ -309,7 +309,7 @@ bool SQLitePublicationDAO::updateAuthors(Publication::Ptr pub)
     return true;
 }
 
-IDList SQLitePublicationDAO::authorIDs(qulonglong pubId) const
+IDList SQLiteDocumentDAO::authorIDs(qulonglong pubId) const
 {
     IDList ret;
     bool ok = true;
@@ -328,7 +328,7 @@ IDList SQLitePublicationDAO::authorIDs(qulonglong pubId) const
     return ret;
 }
 
-QSet<qulonglong> SQLitePublicationDAO::toAuthorSet(Author::List authors) const
+QSet<qulonglong> SQLiteDocumentDAO::toAuthorSet(Author::List authors) const
 {
     QSet<qulonglong> ret;
 

@@ -20,22 +20,22 @@
 
 #include <library/BaseEntity.h>
 #include <library/Author.h>
-#include <library/PublicationType.h>
+#include <library/DocumentType.h>
 #include <library/Journal.h>
 
 #include <QStringList>
 #include <QString>
 
-class Publication : public BaseEntity
+class Document : public BaseEntity
 {
     public:
 
         //typedef QSharedPointer<Publication> Ptr;
-        typedef Publication * Ptr;
+        typedef Document * Ptr;
         typedef QList<Ptr> List;
 
-        Publication();
-        ~Publication();
+        Document();
+        ~Document();
 
         QString abstract() const
         {
@@ -163,7 +163,7 @@ class Publication : public BaseEntity
             this->mTitle = mTitle;
         }
 
-        void setType(PublicationType type)
+        void setType(DocumentType type)
         {
             this->mType = type;
         }
@@ -188,7 +188,7 @@ class Publication : public BaseEntity
             return mTitle;
         }
 
-        PublicationType type() const
+        DocumentType type() const
         {
             return mType;
         }
@@ -225,7 +225,7 @@ private:
     bool mIsPublished;
     bool mIsPeerReviewed;
 
-    PublicationType mType;
+    DocumentType mType;
     Journal::Ptr mJournal;
 };
 

@@ -20,14 +20,14 @@
 
 #include <QAbstractItemModel>
 
-class PublicationDAO;
+class DocumentDAO;
 
 class JournalModel : public QAbstractItemModel
 {
     Q_OBJECT
 
     public:
-        JournalModel(PublicationDAO *pubDAO);
+        JournalModel(DocumentDAO *pubDAO);
         virtual ~JournalModel();
 
         virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -46,7 +46,7 @@ class JournalModel : public QAbstractItemModel
         QVariant handleColumnNames(int column) const;
         QVariant handleRead(int row, int column) const;
 
-        PublicationDAO *mPublicationDAO;
+        DocumentDAO *mPublicationDAO;
 };
 
 #endif /* JOURNALMODEL_H_ */

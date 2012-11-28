@@ -18,24 +18,24 @@
 #ifndef PDFIMPORTWIZARD_H_
 #define PDFIMPORTWIZARD_H_
 
-#include <library/Publication.h>
+#include <library/Document.h>
 #include <QWizard>
 
 class PDFImportWizard : public QWizard
 {
     public:
-        PDFImportWizard(Publication::Ptr pub);
+        PDFImportWizard(Document::Ptr pub);
         virtual ~PDFImportWizard();
 
-        Publication::Ptr publication() const
+        Document::Ptr publication() const
         {
             return mPub;
         }
 
-        static bool importPublication(Publication::Ptr pub);
+        static bool importPublication(Document::Ptr pub);
 
     private:
-        Publication::Ptr mPub;
+        Document::Ptr mPub;
 };
 
 #endif /* PDFIMPORTWIZARD_H_ */

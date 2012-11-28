@@ -18,34 +18,34 @@
 #ifndef SQLITEPUBLICATIONDAO_H_
 #define SQLITEPUBLICATIONDAO_H_
 
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 #include <library/sqlite/SQLiteBaseDAO.h>
 
 class SQLiteRepository;
 
-class SQLitePublicationDAO : public PublicationDAO, public SQLiteBaseDAO
+class SQLiteDocumentDAO : public DocumentDAO, public SQLiteBaseDAO
 {
     friend class SQLiteRepository;
 
     public:
-        SQLitePublicationDAO(SQLiteRepository *cache);
-        virtual ~SQLitePublicationDAO();
+        SQLiteDocumentDAO(SQLiteRepository *cache);
+        virtual ~SQLiteDocumentDAO();
 
-        virtual Publication::Ptr findById(qulonglong id) const;
+        virtual Document::Ptr findById(qulonglong id) const;
 
-        virtual bool saveOrUpdate(Publication::Ptr pub);
+        virtual bool saveOrUpdate(Document::Ptr pub);
 
-        virtual Publication::List findAll() const;
+        virtual Document::List findAll() const;
 
         virtual QStringList journals() const;
         virtual QStringList conferences() const;
 
     protected:
 
-        bool save(Publication::Ptr pub);
-        bool update(Publication::Ptr pub);
+        bool save(Document::Ptr pub);
+        bool update(Document::Ptr pub);
 
-        bool updateAuthors(Publication::Ptr pub);
+        bool updateAuthors(Document::Ptr pub);
 
         IDList authorIDs(qulonglong pubId) const;
         QSet<qulonglong> toAuthorSet(Author::List authors) const;

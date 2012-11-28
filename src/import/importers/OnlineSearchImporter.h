@@ -18,7 +18,7 @@
 #ifndef ONLINESEARCHIMPORTER_H_
 #define ONLINESEARCHIMPORTER_H_
 
-#include <library/Publication.h>
+#include <library/Document.h>
 #include <QStringList>
 
 /*! This is a importer interface for online search engines, such as Google Scholar, Citeseer, and
@@ -34,7 +34,7 @@ class OnlineSearchImporter
         /*! Search this importer for a list of keywords, and returns a list of documents that match the keywords.
          *
          */
-        virtual Publication::List search(const QStringList& keywords) const = 0;
+        virtual Document::List search(const QStringList& keywords) const = 0;
 };
 
 #endif /* ONLINESEARCHIMPORTER_H_ */

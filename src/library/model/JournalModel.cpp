@@ -19,9 +19,9 @@
 
 #include <QDebug>
 #include <QVariant>
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 
-JournalModel::JournalModel(PublicationDAO *pubDAO)
+JournalModel::JournalModel(DocumentDAO *pubDAO)
  : QAbstractItemModel(), mPublicationDAO(pubDAO)
 {
 }

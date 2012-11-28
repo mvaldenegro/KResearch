@@ -24,10 +24,10 @@
 #include <QMap>
 
 #include <library/Author.h>
-#include <library/Publication.h>
+#include <library/Document.h>
 
 #include <library/dao/AuthorDAO.h>
-#include <library/dao/PublicationDAO.h>
+#include <library/dao/DocumentDAO.h>
 
 #include <library/Repository.h>
 
@@ -42,7 +42,7 @@ class SQLiteRepository : public Repository
             return mAuthorDAO;
         }
 
-        PublicationDAO * publicationDAO() const
+        DocumentDAO * publicationDAO() const
         {
             return mPublicationDAO;
         }
@@ -63,7 +63,7 @@ class SQLiteRepository : public Repository
         QSqlDatabase mDB;
 
         AuthorDAO *mAuthorDAO;
-        PublicationDAO *mPublicationDAO;
+        DocumentDAO *mPublicationDAO;
         JournalDAO *mJournalDAO;
 };
 

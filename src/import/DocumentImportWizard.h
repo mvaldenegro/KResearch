@@ -27,7 +27,7 @@ class DocumentImportWizard : public QWizard
         DocumentImportWizard(Document::Ptr pub);
         virtual ~DocumentImportWizard();
 
-        Document::Ptr publication() const
+        Document::Ptr document() const
         {
             return mPub;
         }

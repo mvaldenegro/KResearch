@@ -85,7 +85,7 @@ bool DocumentImportWizardAuthorPage::validatePage()
 
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    wiz->publication()->setAuthors(authList);
+    wiz->document()->setAuthors(authList);
 
     return true;
 }
@@ -94,5 +94,6 @@ void DocumentImportWizardAuthorPage::initializePage()
 {
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    mEditWidget->setLocalUrl(wiz->publication()->localUrl());
+    mEditWidget->setLocalUrl(wiz->document()->localUrl());
+    mEditWidget->setAuthorList(wiz->document()->authors());
 }

@@ -46,14 +46,14 @@ void DocumentImportWizardTitlePage::acquireTitle()
 {
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    QString title = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
+    QString title = PDFDocumentDialog::selectString(wiz->document()->localUrl());
     setField("title", title.simplified());
 }
 void DocumentImportWizardTitlePage::acquireYear()
 {
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    QString year = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
+    QString year = PDFDocumentDialog::selectString(wiz->document()->localUrl());
     setField("year", year.simplified());
 }
 
@@ -61,7 +61,7 @@ void DocumentImportWizardTitlePage::acquireJournal()
 {
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    QString journal = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
+    QString journal = PDFDocumentDialog::selectString(wiz->document()->localUrl());
     setField("journal", journal.simplified());
 }
 
@@ -69,7 +69,7 @@ void DocumentImportWizardTitlePage::acquireConference()
 {
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    QString conference = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
+    QString conference = PDFDocumentDialog::selectString(wiz->document()->localUrl());
     setField("conference", conference.simplified());
 
 }

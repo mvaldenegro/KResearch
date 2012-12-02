@@ -59,6 +59,7 @@ Document::List PDFDocumentImporter::import(const QString& localFilename) const
         ret->setTitle(title);
         ret->setKeywords(keywords);
         ret->setAuthors(parseAuthors(authors));
+        ret->setLocalUrl(localFilename);
 
         delete doc;
     }

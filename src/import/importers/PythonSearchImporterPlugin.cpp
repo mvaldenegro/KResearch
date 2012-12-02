@@ -28,3 +28,7 @@ PythonSearchImporterPlugin::~PythonSearchImporterPlugin()
     // TODO Auto-generated destructor stub
 }
 
+Document::List PythonSearchImporterPlugin::search(const QStringList& keywords) const
+{
+    return Document::List();
+}

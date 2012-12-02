@@ -208,6 +208,16 @@ class Document : public BaseEntity
             return mYear;
         }
 
+        const QStringList keywords() const
+        {
+            return mKeywords;
+        }
+
+        void setKeywords(const QStringList& keywords)
+        {
+            mKeywords = keywords;
+        }
+
 private:
     QString mTitle;
     QString mAbstract;
@@ -227,6 +237,8 @@ private:
 
     DocumentType mType;
     Journal::Ptr mJournal;
+
+    QStringList mKeywords;
 };
 
 #endif /* PUBLICATION_H_ */

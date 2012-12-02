@@ -18,7 +18,7 @@
 #include "Document.h"
 
 Document::Document()
-: BaseEntity(), mYear(0), mVolume(0), mNumber(0), mJournal(0), mIsPublished(false), mIsPeerReviewed(false)
+: BaseEntity(), mYear(0), mVolume(0), mNumber(0), mIsPublished(false), mIsPeerReviewed(false), mJournal(0)
 {
 }
 

@@ -22,6 +22,17 @@ Document::Document()
 {
 }
 
+Document::Document(const Document& copy)
+: mTitle(copy.title()), mAbstract(copy.abstract()), mYear(copy.year()),
+  mConference(copy.conference()), mPublisher(copy.publisher()), mVolume(copy.volume()),
+  mNumber(copy.number()), mUrl(copy.url()), mDoi(copy.doi()), mIsbn(copy.isbn()),
+  mLocalURL(copy.localUrl()), mAuthors(copy.authors()), mIsPublished(copy.isPublished()),
+  mIsPeerReviewed(copy.isPeerReviewed()), mType(copy.type()), mJournal(copy.journal()),
+  mKeywords(copy.keywords())
+{
+
+}
+
 Document::~Document()
 {
 }

@@ -35,6 +35,7 @@ class Document : public BaseEntity
         typedef QList<Ptr> List;
 
         Document();
+        Document(const Document& copy);
         ~Document();
 
         QString abstract() const

@@ -19,6 +19,7 @@
 #define DOCUMENTIMPORTER_H_
 
 #include <KUrl>
+#include <KMimeType>
 
 #include <library/Document.h>
 
@@ -34,6 +35,11 @@ class DocumentImporter
     public:
         DocumentImporter();
         virtual ~DocumentImporter();
+
+        /*! Mime types that this importer can import.
+         *
+         */
+        virtual KMimeType::List mimeTypes() const = 0;
 
         /*! Imports a local file.
          *

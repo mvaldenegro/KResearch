@@ -17,7 +17,7 @@
 
 #include "DocumentModel.h"
 
-#include <import/PublicationImportService.h>
+#include <import/DocumentImportService.h>
 
 #include <QDebug>
 #include <QMimeData>

@@ -15,7 +15,7 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PublicationImportService.h"
+#include "DocumentImportService.h"
 
 #include <import/DocumentImportWizard.h>
 #include <import/importers/PDFDocumentImporter.h>

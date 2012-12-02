@@ -35,7 +35,7 @@
 #include <KFileDialog>
 
 #include <ui/PublicationEditDialog.h>
-#include <import/PublicationImportService.h>
+#include <import/DocumentImportService.h>
 #include <library/model/DocumentModel.h>
 #include <library/sqlite/SQLiteRepository.h>
 

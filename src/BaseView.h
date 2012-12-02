@@ -20,7 +20,7 @@
 
 #include <QWidget>
 
-class PublicationImportService;
+class DocumentImportService;
 class QTableView;
 
 class BaseView : public QWidget
@@ -31,7 +31,7 @@ class BaseView : public QWidget
         BaseView(QWidget *parent = 0);
         virtual ~BaseView();
 
-        PublicationImportService *importService() const
+        DocumentImportService *importService() const
         {
             return mImportService;
         }
@@ -43,7 +43,7 @@ class BaseView : public QWidget
         void configureTableView(QTableView *view);
 
     private:
-        PublicationImportService *mImportService;
+        DocumentImportService *mImportService;
 };
 
 #endif /* BASEVIEW_H_ */

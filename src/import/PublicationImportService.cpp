@@ -17,7 +17,8 @@
 
 #include "PublicationImportService.h"
 
-#include <import/PDFImportWizard.h>
+#include <import/DocumentImportWizard.h>
+#include <import/importers/ImportService.h>
 #include <library/dao/DocumentDAO.h>
 
 #include <QFileInfo>
@@ -44,12 +45,19 @@ bool PublicationImportService::import(const QString& fileName)
 
     if(isAcceptedSuffix(info.completeSuffix())) {
 
-        Document::Ptr pub(new Document());
+        Document::List pubs = ImportService::self()->import(fileName);
+        Document::Ptr pub;
 
-        pub->setTitle(info.baseName());
-        pub->setLocalUrl(fileName);
+        if(pubs.count() > 0) {
+            pub = pubs.at(0);
+        } else {
+            pub = new Document();
+        }
 
-        bool ok = PDFImportWizard::importPublication(pub);
+        //pub->setTitle(info.baseName());
+        //pub->setLocalUrl(fileName);
+
+        bool ok = DocumentImportWizard::importPublication(pub);
 
         if(ok) {
             publicationDAO()->saveOrUpdate(pub);

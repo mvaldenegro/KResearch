@@ -15,26 +15,27 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PDFIMPORTWIZARDTITLEPAGE_H_
-#define PDFIMPORTWIZARDTITLEPAGE_H_
+#ifndef DOCUMENTIMPORTWIZARD_H_
+#define DOCUMENTIMPORTWIZARD_H_
 
-#include <QWizardPage>
+#include <library/Document.h>
+#include <QWizard>
 
-#include "ui_TitlePage.h"
-
-class PDFImportWizardTitlePage : public QWizardPage, public Ui::TitlePage
+class DocumentImportWizard : public QWizard
 {
-    Q_OBJECT
-
     public:
-        PDFImportWizardTitlePage();
-        virtual ~PDFImportWizardTitlePage();
+        DocumentImportWizard(Document::Ptr pub);
+        virtual ~DocumentImportWizard();
 
-    public Q_SLOTS:
-        void acquireTitle();
-        void acquireYear();
-        void acquireJournal();
-        void acquireConference();
+        Document::Ptr publication() const
+        {
+            return mPub;
+        }
+
+        static bool importPublication(Document::Ptr pub);
+
+    private:
+        Document::Ptr mPub;
 };
 
-#endif /* PDFIMPORTWIZARDTITLEPAGE_H_ */
+#endif /* DOCUMENTIMPORTWIZARD_H_ */

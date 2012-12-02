@@ -15,18 +15,18 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PDFImportWizard.h"
-#include "PDFImportWizardTitlePage.h"
-#include "PDFImportWizardAuthorPage.h"
+#include "DocumentImportWizard.h"
+#include "DocumentImportWizardTitlePage.h"
+#include "DocumentImportWizardAuthorPage.h"
 
 #include <library/Repository.h>
 #include <library/dao/JournalDAO.h>
 
-PDFImportWizard::PDFImportWizard(Document::Ptr pub)
+DocumentImportWizard::DocumentImportWizard(Document::Ptr pub)
 : QWizard()
 {
-    addPage(new PDFImportWizardTitlePage());
-    addPage(new PDFImportWizardAuthorPage());
+    addPage(new DocumentImportWizardTitlePage());
+    addPage(new DocumentImportWizardAuthorPage());
 
     setField("title", pub->title());
     setField("year", pub->year());
@@ -44,13 +44,13 @@ PDFImportWizard::PDFImportWizard(Document::Ptr pub)
     setWindowTitle("Publication import wizard");
 }
 
-PDFImportWizard::~PDFImportWizard()
+DocumentImportWizard::~DocumentImportWizard()
 {
 }
 
-bool PDFImportWizard::importPublication(Document::Ptr pub)
+bool DocumentImportWizard::importPublication(Document::Ptr pub)
 {
-    PDFImportWizard wizard(pub);
+    DocumentImportWizard wizard(pub);
     int exec = wizard.exec();
 
     if(exec == QDialog::Accepted) {

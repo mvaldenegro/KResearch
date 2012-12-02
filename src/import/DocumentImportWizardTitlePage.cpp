@@ -15,11 +15,11 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PDFImportWizardTitlePage.h"
-#include "PDFImportWizard.h"
+#include "DocumentImportWizardTitlePage.h"
+#include "DocumentImportWizard.h"
 #include <pdfwidget/PDFDocumentDialog.h>
 
-PDFImportWizardTitlePage::PDFImportWizardTitlePage()
+DocumentImportWizardTitlePage::DocumentImportWizardTitlePage()
 : QWizardPage()
 {
     setTitle("Publication information");
@@ -38,36 +38,36 @@ PDFImportWizardTitlePage::PDFImportWizardTitlePage()
     connect(conferenceButton, SIGNAL(clicked()), this, SLOT(acquireConference()));
 }
 
-PDFImportWizardTitlePage::~PDFImportWizardTitlePage()
+DocumentImportWizardTitlePage::~DocumentImportWizardTitlePage()
 {
 }
 
-void PDFImportWizardTitlePage::acquireTitle()
+void DocumentImportWizardTitlePage::acquireTitle()
 {
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     QString title = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
     setField("title", title.simplified());
 }
-void PDFImportWizardTitlePage::acquireYear()
+void DocumentImportWizardTitlePage::acquireYear()
 {
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     QString year = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
     setField("year", year.simplified());
 }
 
-void PDFImportWizardTitlePage::acquireJournal()
+void DocumentImportWizardTitlePage::acquireJournal()
 {
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     QString journal = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
     setField("journal", journal.simplified());
 }
 
-void PDFImportWizardTitlePage::acquireConference()
+void DocumentImportWizardTitlePage::acquireConference()
 {
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     QString conference = PDFDocumentDialog::selectString(wiz->publication()->localUrl());
     setField("conference", conference.simplified());

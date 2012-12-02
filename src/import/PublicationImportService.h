@@ -15,8 +15,8 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IMPORTSERVICE_H_
-#define IMPORTSERVICE_H_
+#ifndef PUBIMPORTSERVICE_H_
+#define PUBIMPORTSERVICE_H_
 
 #include <QString>
 
@@ -44,4 +44,4 @@ class PublicationImportService
         DocumentDAO *mPubDAO;
 };
 
-#endif /* IMPORTSERVICE_H_ */
+#endif /* PUBIMPORTSERVICE_H_ */

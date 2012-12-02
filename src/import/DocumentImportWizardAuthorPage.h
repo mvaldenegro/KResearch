@@ -15,8 +15,8 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PDFIMPORTWIZARDAUTHORPAGE_H_
-#define PDFIMPORTWIZARDAUTHORPAGE_H_
+#ifndef DOCUMENTIMPORTWIZARDAUTHORPAGE_H_
+#define DOCUMENTIMPORTWIZARDAUTHORPAGE_H_
 
 #include <QWizardPage>
 
@@ -24,11 +24,11 @@
 
 class AuthorEditWidget;
 
-class PDFImportWizardAuthorPage : public QWizardPage, public Ui::AuthorPage
+class DocumentImportWizardAuthorPage : public QWizardPage, public Ui::AuthorPage
 {
     public:
-        PDFImportWizardAuthorPage();
-        virtual ~PDFImportWizardAuthorPage();
+        DocumentImportWizardAuthorPage();
+        virtual ~DocumentImportWizardAuthorPage();
 
         virtual bool validatePage();
         virtual void initializePage();
@@ -37,4 +37,4 @@ class PDFImportWizardAuthorPage : public QWizardPage, public Ui::AuthorPage
         AuthorEditWidget *mEditWidget;
 };
 
-#endif /* PDFIMPORTWIZARDAUTHORPAGE_H_ */
+#endif /* DOCUMENTIMPORTWIZARDAUTHORPAGE_H_ */

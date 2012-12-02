@@ -15,15 +15,15 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "PDFImportWizardAuthorPage.h"
-#include "PDFImportWizard.h"
+#include "DocumentImportWizardAuthorPage.h"
+#include "DocumentImportWizard.h"
 
 #include <library/Repository.h>
 #include <ui/AuthorEditWidget.h>
 
 #include <KIcon>
 
-PDFImportWizardAuthorPage::PDFImportWizardAuthorPage()
+DocumentImportWizardAuthorPage::DocumentImportWizardAuthorPage()
 : QWizardPage()
 {
     setTitle("Publication authors");
@@ -47,11 +47,11 @@ PDFImportWizardAuthorPage::PDFImportWizardAuthorPage()
     connect(removeAuthorButton, SIGNAL(clicked()), mEditWidget, SLOT(removeSelectedAuthor()));
 }
 
-PDFImportWizardAuthorPage::~PDFImportWizardAuthorPage()
+DocumentImportWizardAuthorPage::~DocumentImportWizardAuthorPage()
 {
 }
 
-bool PDFImportWizardAuthorPage::validatePage()
+bool DocumentImportWizardAuthorPage::validatePage()
 {
     QStringList authors = mEditWidget->currentAuthorList();
     Author::List authList;
@@ -83,16 +83,16 @@ bool PDFImportWizardAuthorPage::validatePage()
         authList.append(candidate);
     }
 
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     wiz->publication()->setAuthors(authList);
 
     return true;
 }
 
-void PDFImportWizardAuthorPage::initializePage()
+void DocumentImportWizardAuthorPage::initializePage()
 {
-    PDFImportWizard *wiz = static_cast<PDFImportWizard *>(wizard());
+    DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
     mEditWidget->setLocalUrl(wiz->publication()->localUrl());
 }

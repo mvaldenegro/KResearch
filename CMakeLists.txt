@@ -18,6 +18,6 @@ set(QT_USE_QTSQL true)
 INCLUDE(${QT_USE_FILE}) 
 
 kde4_add_executable(kresearch ${kresearch_SOURCES})
-target_link_libraries(kresearch ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_LIBRARIES} ${KDE4_KPARTS_LIBS} poppler-qt4)
+target_link_libraries(kresearch ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${QT_LIBRARIES} ${KDE4_KPARTS_LIBS} ${KDE4_KROSSCORE_LIBS} poppler-qt4)
 
 install(TARGETS kresearch ${INSTALL_TARGETS_DEFAULT_ARGS})

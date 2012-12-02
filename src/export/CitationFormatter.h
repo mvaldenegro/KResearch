@@ -33,7 +33,7 @@ class CitationFormatter
 
         /*! Format a citation, and return the result as a QString.
          */
-        virtual QString format(const Document::Ptr& publication) const;
+        virtual QString format(const Document::Ptr& publication) const = 0;
 };
 
 #endif /* CITATIONFORMATTER_H_ */

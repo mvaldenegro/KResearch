@@ -28,8 +28,6 @@
 DocumentModel::DocumentModel(DocumentDAO *pubDAO, JournalDAO *journalDAO)
 : QAbstractItemModel(), mPublicationDAO(pubDAO), mJournalDAO(journalDAO)
 {
-    mImportService = new PublicationImportService(pubDAO);
-
     connect(pubDAO, SIGNAL(dataChanged()), this, SLOT(invalidateData()));
 }
 
@@ -158,7 +156,7 @@ bool DocumentModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
     foreach(QUrl url, urls) {
         qDebug() << "I was dropped" << url;
 
-        mImportService->import(url.path());
+        DocumentImportService::self()->importIntoLibrary(url.path());
     }
 
     return true;

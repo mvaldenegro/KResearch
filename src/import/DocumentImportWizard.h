@@ -32,7 +32,7 @@ class DocumentImportWizard : public QWizard
             return mPub;
         }
 
-        static bool importPublication(Document::Ptr pub);
+        static bool importDocument(Document::Ptr doc);
 
     private:
         Document::Ptr mPub;

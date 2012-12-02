@@ -48,12 +48,11 @@ DocumentImportWizard::~DocumentImportWizard()
 {
 }
 
-bool DocumentImportWizard::importPublication(Document::Ptr pub)
+bool DocumentImportWizard::importDocument(Document::Ptr doc)
 {
-    DocumentImportWizard wizard(pub);
-    int exec = wizard.exec();
+    DocumentImportWizard wizard(doc);
 
-    if(exec == QDialog::Accepted) {
+    if(wizard.exec() == QDialog::Accepted) {
 
         QString title = wizard.field("title").toString();
         int year = wizard.field("year").toInt();
@@ -62,10 +61,10 @@ bool DocumentImportWizard::importPublication(Document::Ptr pub)
 
         JournalDAO *journalDAO = Repository::self()->journalDAO();
 
-        pub->setTitle(title);
-        pub->setYear(year);
-        pub->setJournal(journalDAO->findByName(journal));
-        pub->setConference(conference);
+        doc->setTitle(title);
+        doc->setYear(year);
+        doc->setJournal(journalDAO->findByName(journal));
+        doc->setConference(conference);
 
         return true;
     }

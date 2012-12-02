@@ -23,8 +23,6 @@
 #include <library/dao/DocumentDAO.h>
 #include <library/dao/JournalDAO.h>
 
-class PublicationImportService;
-
 class DocumentModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -61,7 +59,6 @@ class DocumentModel : public QAbstractItemModel
 
         DocumentDAO *mPublicationDAO;
         JournalDAO *mJournalDAO;
-        PublicationImportService *mImportService;
 };
 
 #endif /* PUBLICATIONMODEL_H_ */

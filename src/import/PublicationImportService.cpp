@@ -18,64 +18,107 @@
 #include "PublicationImportService.h"
 
 #include <import/DocumentImportWizard.h>
-#include <import/importers/ImportService.h>
+#include <import/importers/PDFDocumentImporter.h>
 #include <library/dao/DocumentDAO.h>
 
 #include <QFileInfo>
 #include <QDebug>
 
-PublicationImportService::PublicationImportService(DocumentDAO *pubDAO)
+#include <assert.h>
+
+DocumentImportService *DocumentImportService::mSelf = 0;
+
+DocumentImportService::DocumentImportService(DocumentDAO *pubDAO)
 : mPubDAO(pubDAO)
 {
+    assert(mSelf == 0);
+
+    mSelf = this;
+
+    registerImporter(new PDFDocumentImporter());
 }
 
-PublicationImportService::~PublicationImportService()
+DocumentImportService::~DocumentImportService()
 {
 }
 
-bool PublicationImportService::import(const QString& fileName)
+bool DocumentImportService::importIntoLibrary(const QString& fileName)
 {
     qDebug() << "Attempting to import" << fileName;
 
-    QFileInfo info(fileName);
-
-    if(!info.isFile()) {
+    if(!QFileInfo(fileName).isFile()) {
         return false;
     }
 
-    if(isAcceptedSuffix(info.completeSuffix())) {
+    Document::List docs = import(fileName);
+    Document::Ptr doc;
 
-        Document::List pubs = ImportService::self()->import(fileName);
-        Document::Ptr pub;
-
-        if(pubs.count() > 0) {
-            pub = pubs.at(0);
-        } else {
-            pub = new Document();
-        }
-
-        //pub->setTitle(info.baseName());
-        //pub->setLocalUrl(fileName);
-
-        bool ok = DocumentImportWizard::importPublication(pub);
-
-        if(ok) {
-            publicationDAO()->saveOrUpdate(pub);
-        }
-
-        return ok;
+    //TODO: Handle multiple documents imported from one file
+    if(docs.count() > 0) {
+        doc = docs.at(0);
+    } else {
+        doc = new Document();
     }
 
-    return false;
+    bool ok = DocumentImportWizard::importDocument(doc);
+
+    if(ok) {
+        documentDAO()->saveOrUpdate(doc);
+    }
+
+    return ok;
 }
 
-bool PublicationImportService::isAcceptedSuffix(const QString& suffix) const
+Document::List DocumentImportService::import(const QString& localFilename) const
 {
-    QString ext = suffix.toLower();
+    Document::List ret;
+    KMimeType::Ptr mimeType = KMimeType::findByFileContent(localFilename);
+    DocumentImporter *importer = importerForMimeType(mimeType);
 
-    if(ext == "pdf" || ext == "ps") {
-        return true;
+    qDebug() << "Finding importer for mimeType" << mimeType->name();
+
+    if(importer) {
+        ret = importer->import(localFilename);
+
+        qDebug("Importer found");
+    } else {
+        ret = Document::List();
+
+        qDebug("Importer not found!");
     }
 
-    return false;
+    return ret;
+}
+
+DocumentImporter *DocumentImportService::importerForMimeType(const KMimeType::Ptr& mimeType) const
+{
+    foreach(DocumentImporter *importer, mImporters) {
+        KMimeType::List mimeTypes = importer->mimeTypes();
+
+        foreach(KMimeType::Ptr imptMime, mimeTypes) {
+            if(imptMime->name() == mimeType->name()) {
+                return importer;
+            }
+        }
+    }
+
+    return 0;
+}
+
+void DocumentImportService::registerImporter(DocumentImporter *importer)
+{
+    if(!mImporters.contains(importer)) {
+
+        mImporters.append(importer);
+    }
+}
+
+void DocumentImportService::removeImporter(DocumentImporter *importer)
+{
+    mImporters.removeAll(importer);
+}
+
+DocumentImportService *DocumentImportService::self()
+{
+    return mSelf;
 }

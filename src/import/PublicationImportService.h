@@ -20,28 +20,38 @@
 
 #include <QString>
 
+#include <import/importers/DocumentImporter.h>
 #include <library/Document.h>
 
 class DocumentDAO;
 
-class PublicationImportService
+class DocumentImportService
 {
     public:
-        PublicationImportService(DocumentDAO *pubDAO);
-        virtual ~PublicationImportService();
+        DocumentImportService(DocumentDAO *pubDAO);
+        virtual ~DocumentImportService();
 
-        bool import(const QString& fileName);
+        bool importIntoLibrary(const QString& fileName);
+
+        Document::List import(const QString& localFilename) const;
+        DocumentImporter *importerForMimeType(const KMimeType::Ptr& mime) const;
+
+        void registerImporter(DocumentImporter *importer);
+        void removeImporter(DocumentImporter *importer);
+
+        static DocumentImportService *self();
 
     protected:
-        bool isAcceptedSuffix(const QString& suffix) const;
-
-        DocumentDAO *publicationDAO() const
+        DocumentDAO *documentDAO() const
         {
             return mPubDAO;
         }
 
     private:
         DocumentDAO *mPubDAO;
+        QList<DocumentImporter *> mImporters;
+
+        static DocumentImportService *mSelf;
 };
 
 #endif /* PUBIMPORTSERVICE_H_ */

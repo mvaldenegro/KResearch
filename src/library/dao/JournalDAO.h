@@ -18,24 +18,19 @@
 #ifndef JOURNALDAO_H_
 #define JOURNALDAO_H_
 
+#include <library/dao/GenericDAO.h>
 #include <library/dao/BaseDAO.h>
 #include <library/Journal.h>
 
 #include <QStringList>
 
-class JournalDAO : public BaseDAO
+class JournalDAO : public BaseDAO, public GenericDAO<Journal>
 {
     public:
         JournalDAO();
         virtual ~JournalDAO();
 
-        virtual Journal::Ptr findById(qulonglong id) const = 0;
         virtual Journal::Ptr findByName(const QString& name) const = 0;
-
-        virtual bool saveOrUpdate(Journal::Ptr author) = 0;
-
-        virtual Journal::List findAll() const = 0;
-
         virtual QStringList journalNames() const = 0;
 };
 

@@ -38,6 +38,11 @@ class GenericDAO
         virtual bool saveOrUpdate(typename T::Ptr entity) = 0;
 
         virtual typename T::List findAll() const = 0;
+
+        virtual bool remove(typename T::Ptr& entity)
+        {
+            return false;
+        }
 };
 
 

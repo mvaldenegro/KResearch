@@ -20,20 +20,15 @@
 
 #include <QStringList>
 
+#include <library/dao/GenericDAO.h>
 #include <library/dao/BaseDAO.h>
 #include <library/Document.h>
 
-class DocumentDAO : public BaseDAO
+class DocumentDAO : public BaseDAO, public GenericDAO<Document>
 {
     public:
         DocumentDAO();
         virtual ~DocumentDAO();
-
-        virtual Document::Ptr findById(qulonglong id) const = 0;
-
-        virtual bool saveOrUpdate(Document::Ptr pub) = 0;
-
-        virtual Document::List findAll() const = 0;
 
         virtual QStringList journals() const = 0;
         virtual QStringList conferences() const = 0;

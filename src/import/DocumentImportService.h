@@ -32,6 +32,7 @@ class DocumentImportService
         virtual ~DocumentImportService();
 
         bool importIntoLibrary(const QString& fileName);
+        bool multipleImportIntoLibrary(Document::List docs);
 
         Document::List import(const QString& localFilename) const;
         DocumentImporter *importerForMimeType(const KMimeType::Ptr& mime) const;

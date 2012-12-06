@@ -69,6 +69,15 @@ bool DocumentImportService::importIntoLibrary(const QString& fileName)
     return ok;
 }
 
+bool DocumentImportService::multipleImportIntoLibrary(Document::List docs)
+{
+    for(Document::Ptr doc: docs) {
+        documentDAO()->saveOrUpdate(doc);
+    }
+
+    return true;
+}
+
 Document::List DocumentImportService::import(const QString& localFilename) const
 {
     Document::List ret;
@@ -92,10 +101,10 @@ Document::List DocumentImportService::import(const QString& localFilename) const
 
 DocumentImporter *DocumentImportService::importerForMimeType(const KMimeType::Ptr& mimeType) const
 {
-    foreach(DocumentImporter *importer, mImporters) {
+    for(DocumentImporter *importer: mImporters) {
         KMimeType::List mimeTypes = importer->mimeTypes();
 
-        foreach(KMimeType::Ptr imptMime, mimeTypes) {
+        for(KMimeType::Ptr imptMime: mimeTypes) {
             if(imptMime->name() == mimeType->name()) {
                 return importer;
             }

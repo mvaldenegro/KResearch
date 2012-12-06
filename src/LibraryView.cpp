@@ -100,7 +100,7 @@ void LibraryView::import()
         return;
     }
 
-    importService()->import(fileName);
+    importService()->importIntoLibrary(fileName);
 }
 
 void LibraryView::edit()

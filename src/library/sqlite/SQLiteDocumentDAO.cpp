@@ -156,6 +156,23 @@ QStringList SQLiteDocumentDAO::conferences() const
     return ret;
 }
 
+bool SQLiteDocumentDAO::remove(Document::Ptr entity)
+{
+    QSqlQuery query(database());
+    query.prepare("DELETE FROM publication WHERE id = :id");
+    query.bindValue(":id", entity->id());
+
+    bool ret =  query.exec();
+
+    if(ret) {
+        repository()->publications()->remove(entity->id());
+
+        emit dataChanged();
+    }
+
+    return ret;
+}
+
 bool SQLiteDocumentDAO::save(Document::Ptr pub)
 {
     if(!pub) {

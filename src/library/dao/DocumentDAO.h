@@ -32,6 +32,8 @@ class DocumentDAO : public BaseDAO, public GenericDAO<Document>
 
         virtual QStringList journals() const = 0;
         virtual QStringList conferences() const = 0;
+
+        virtual bool remove(typename Document::Ptr entity) = 0;
 };
 
 #endif /* PUBLICATIONDAO_H_ */

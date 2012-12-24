@@ -110,6 +110,20 @@ void LibraryView::edit()
     }
 }
 
+void LibraryView::remove()
+{
+    if(selectedPublication()) {
+
+        qDebug() << "Removing" << selectedPublication()->title();
+
+        bool ret = Repository::self()->publicationDAO()->remove(selectedPublication());
+
+        qDebug() << "Successful?" << ret;
+
+        mSelectedPub = 0;
+    }
+}
+
 void LibraryView::activated(const QModelIndex& idx)
 {
     if(!idx.isValid()) {
@@ -161,6 +175,8 @@ void LibraryView::setupToolbar()
     QAction *edit = bar->addAction(KIcon("document-edit"), "Edit");
     QAction *print = bar->addAction(KIcon("document-print"), "Print");
     QAction *dlte = bar->addAction(KIcon("edit-delete"), "Delete");
+
+    connect(dlte, SIGNAL(triggered()), this, SLOT(remove()));
 
     bar->addSeparator();
 

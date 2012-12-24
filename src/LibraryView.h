@@ -50,6 +50,7 @@ class LibraryView : public BaseView
     public Q_SLOTS:
         void import();
         void edit();
+        void remove();
 
     signals:
         void activated(const QString& fileName);

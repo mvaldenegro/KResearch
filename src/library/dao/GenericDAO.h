@@ -39,7 +39,7 @@ class GenericDAO
 
         virtual typename T::List findAll() const = 0;
 
-        virtual bool remove(typename T::Ptr& entity)
+        virtual bool remove(typename T::Ptr entity)
         {
             return false;
         }

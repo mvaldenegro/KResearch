@@ -40,6 +40,8 @@ class SQLiteDocumentDAO : public DocumentDAO, public SQLiteBaseDAO
         virtual QStringList journals() const;
         virtual QStringList conferences() const;
 
+        virtual bool remove(Document::Ptr entity);
+
     protected:
 
         bool save(Document::Ptr pub);

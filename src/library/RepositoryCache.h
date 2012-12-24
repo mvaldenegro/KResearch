@@ -59,6 +59,22 @@ class RepositoryCache
             return mCacheList;
         }
 
+        void remove(qulonglong id)
+        {
+            int idx = -1;
+
+            for(int i = 0; i < mCacheList.count(); i++) {
+                if(mCacheList[i]->id() == id) {
+                    idx = i;
+                }
+            }
+
+            if(idx != -1) {
+                mCacheList.removeAt(idx);
+                mCacheMap.remove(id);
+            }
+        }
+
     private:
         QList<typename T::Ptr> mCacheList;
         QMap<qulonglong, typename T::Ptr> mCacheMap;

@@ -17,6 +17,8 @@
 
 #include "SQLiteDocumentDAO.h"
 #include <library/sqlite/SQLiteRepository.h>
+#include <library/sqlite/Transaction.h>
+#include <library/sqlite/QueryExecutor.h>
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -38,59 +40,51 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
         return repository()->publications()->find(id);
     }
 
-    QSqlQuery query(database());
-    bool ok = true;
-    ok &= query.prepare("SELECT * FROM publication WHERE id = :id");
-    query.bindValue(":id", id);
-    ok &= query.exec();
+    QueryExecutor executor(database());
+    QSqlQuery query = executor.select("publication", QStringList(), makeQueryParameters("id", id));
 
-    debug(query);
+    if(query.next()) {
 
-    if(ok) {
+        QSqlRecord record = query.record();
+        qulonglong id = record.value("id").toULongLong();
+        Document::Ptr pub = Document::Ptr(new Document());
 
-        if(query.next()) {
+        pub->setId(id);
+        pub->setTitle(record.value("title").toString());
+        pub->setAbstract(record.value("abstract").toString());
+        pub->setYear(record.value("year").toInt());
+        pub->setConference(record.value("conference").toString());
+        pub->setPublisher(record.value("publisher").toString());
+        pub->setVolume(record.value("volume").toInt());
+        pub->setNumber(record.value("number").toInt());
+        pub->setUrl(record.value("url").toString());
+        pub->setDoi(record.value("doi").toString());
+        pub->setIsbn(record.value("isbn").toString());
+        pub->setLocalUrl(record.value("localURL").toString());
+        pub->setType(DocumentType::fromUInt(record.value("type").toUInt()));
+        pub->setPublished(record.value("isPublished").toBool());
+        pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
 
-            QSqlRecord record = query.record();
-            qulonglong id = record.value("id").toULongLong();
-            Document::Ptr pub = Document::Ptr(new Document());
+        repository()->publications()->insert(id, pub);
 
-            pub->setId(id);
-            pub->setTitle(record.value("title").toString());
-            pub->setAbstract(record.value("abstract").toString());
-            pub->setYear(record.value("year").toInt());
-            pub->setConference(record.value("conference").toString());
-            pub->setPublisher(record.value("publisher").toString());
-            pub->setVolume(record.value("volume").toInt());
-            pub->setNumber(record.value("number").toInt());
-            pub->setUrl(record.value("url").toString());
-            pub->setDoi(record.value("doi").toString());
-            pub->setIsbn(record.value("isbn").toString());
-            pub->setLocalUrl(record.value("localURL").toString());
-            pub->setType(DocumentType::fromUInt(record.value("type").toUInt()));
-            pub->setPublished(record.value("isPublished").toBool());
-            pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
+        IDList idAuthors = authorIDs(id);
+        Author::List authors;
 
-            repository()->publications()->insert(id, pub);
-
-            IDList idAuthors = authorIDs(id);
-            Author::List authors;
-
-            foreach(qulonglong aid, idAuthors) {
-                authors.append(repository()->authorDAO()->findById(aid));
-            }
-
-            pub->setAuthors(authors);
-
-            qulonglong jid = record.value("journalId").toULongLong();
-
-            if(jid != 0) {
-                pub->setJournal(repository()->journalDAO()->findById(jid));
-            }
-
-            emit dataChanged();
-
-            return pub;
+        foreach(qulonglong aid, idAuthors) {
+            authors.append(repository()->authorDAO()->findById(aid));
         }
+
+        pub->setAuthors(authors);
+
+        qulonglong jid = record.value("journalId").toULongLong();
+
+        if(jid != 0) {
+            pub->setJournal(repository()->journalDAO()->findById(jid));
+        }
+
+        emit dataChanged();
+
+        return pub;
     }
 
     return Document::Ptr();
@@ -158,11 +152,11 @@ QStringList SQLiteDocumentDAO::conferences() const
 
 bool SQLiteDocumentDAO::remove(Document::Ptr entity)
 {
-    QSqlQuery query(database());
-    query.prepare("DELETE FROM publication WHERE id = :id");
-    query.bindValue(":id", entity->id());
+    if(!entity) {
+        return false;
+    }
 
-    bool ret =  query.exec();
+    bool ret = QueryExecutor(database()).remove("publication", makeQueryParameters("id", entity->id()));
 
     if(ret) {
         repository()->publications()->remove(entity->id());
@@ -179,59 +173,43 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
         return false;
     }
 
-    bool ok = true;
-    //database().transaction();
+    QueryExecutor executor(database());
+    QueryParameters params;
 
-    QSqlQuery query(database());
-    ok &= query.prepare("INSERT INTO publication(title, abstract, year, conference, publisher, "
-                                                "volume, number, url, doi, isbn, localURL,"
-                                                "type, isPublished, isPeerReviewed, journalId) "
-                         "VALUES(:title, :abstract, :year, :conference, :publisher, "
-                                ":volume, :number, :url, :doi, :isbn, :localURL, "
-                                ":type, :isPublished, :isPeerReviewed, :journalId)");
-
-    query.bindValue(":title", pub->title());
-    query.bindValue(":abstract", pub->abstract());
-    query.bindValue(":year", pub->year());
-    query.bindValue(":conference", pub->conference());
-    query.bindValue(":publisher", pub->publisher());
-    query.bindValue(":volume", pub->volume());
-    query.bindValue(":number", pub->number());
-    query.bindValue(":url", pub->url());
-    query.bindValue(":doi", pub->doi());
-    query.bindValue(":isbn", pub->isbn());
-    query.bindValue(":localURL", pub->localUrl());
-    query.bindValue(":type", pub->type().toUInt());
-    query.bindValue(":isPublished", pub->isPublished());
-    query.bindValue(":isPeerReviewed", pub->isPeerReviewed());
+    params.insert("title", pub->title());
+    params.insert("abstract", pub->abstract());
+    params.insert("year", pub->year());
+    params.insert("conference", pub->conference());
+    params.insert("publisher", pub->publisher());
+    params.insert("volume", pub->volume());
+    params.insert("number", pub->number());
+    params.insert("url", pub->url());
+    params.insert("doi", pub->doi());
+    params.insert("isbn", pub->isbn());
+    params.insert("localURL", pub->localUrl());
+    params.insert("type", pub->type().toUInt());
+    params.insert("isPublished", pub->isPublished());
+    params.insert("isPeerReviewed", pub->isPeerReviewed());
 
     if(pub->journal()) {
-        query.bindValue(":journalId", pub->journal()->id());
+        params.insert("journalId", pub->journal()->id());
     } else {
-        query.bindValue(":journalId", QVariant());
+        params.insert("journalId", QVariant());
     }
 
-    ok &= query.exec();
-
-    debug(query);
+    bool ok = executor.insert("publication", params);
 
     if(ok) {
-        qulonglong id = lastInsertRowID();
+        qulonglong id = executor.lastInsertID();
         pub->setId(id);
 
         updateAuthors(pub);
 
         repository()->journalDAO()->saveOrUpdate(pub->journal());
         repository()->publications()->insert(id, pub);
-    }
 
-    if(!ok) {
-        //ok &= database().rollback();
-    } else {
-        //ok &= database().commit();
+        emit dataChanged();
     }
-
-    emit dataChanged();
 
     return ok;
 }
@@ -244,43 +222,36 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
 
     repository()->journalDAO()->saveOrUpdate(pub->journal());
 
-    bool ok = true;
+    QueryParameters params;
 
-    QSqlQuery query(database());
-    ok &= query.prepare("UPDATE publication SET title = :title, abstract = :abstract, year = :year, conference = :conference,"
-                        " publisher = :publisher, volume = :volume, number = :number, url = :url, "
-                        " doi = :doi, isbn = :isbn, localURL = :localURL, type = :type, isPublished = :isPublished,"
-                        " isPeerReviewed = :isPeerReviewed, journalId = :journalId WHERE id = :id");
-
-    query.bindValue(":id", pub->id());
-    query.bindValue(":title", pub->title());
-    query.bindValue(":abstract", pub->abstract());
-    query.bindValue(":year", pub->year());
-    query.bindValue(":conference", pub->conference());
-    query.bindValue(":publisher", pub->publisher());
-    query.bindValue(":volume", pub->volume());
-    query.bindValue(":number", pub->number());
-    query.bindValue(":url", pub->url());
-    query.bindValue(":doi", pub->doi());
-    query.bindValue(":isbn", pub->isbn());
-    query.bindValue(":localURL", pub->localUrl());
-    query.bindValue(":type", pub->type().toUInt());
-    query.bindValue(":isPublished", pub->isPublished());
-    query.bindValue(":isPeerReviewed", pub->isPeerReviewed());
+    params.insert("title", pub->title());
+    params.insert("abstract", pub->abstract());
+    params.insert("year", pub->year());
+    params.insert("conference", pub->conference());
+    params.insert("publisher", pub->publisher());
+    params.insert("volume", pub->volume());
+    params.insert("number", pub->number());
+    params.insert("url", pub->url());
+    params.insert("doi", pub->doi());
+    params.insert("isbn", pub->isbn());
+    params.insert("localURL", pub->localUrl());
+    params.insert("type", pub->type().toUInt());
+    params.insert("isPublished", pub->isPublished());
+    params.insert("isPeerReviewed", pub->isPeerReviewed());
 
     if(pub->journal()) {
-        query.bindValue(":journalId", pub->journal()->id());
+        params.insert("journalId", pub->journal()->id());
     } else {
-        query.bindValue(":journalId", QVariant());
+        params.insert("journalId", QVariant());
     }
 
-    ok &= query.exec();
+    bool ok = QueryExecutor().update("publication", makeQueryParameters("id", pub->id()), params);
 
-    debug(query);
+    if(ok) {
+        updateAuthors(pub);
 
-    updateAuthors(pub);
-
-    emit dataChanged();
+        emit dataChanged();
+    }
 
     return ok;
 }
@@ -294,32 +265,24 @@ bool SQLiteDocumentDAO::updateAuthors(Document::Ptr pub)
     QSet<qulonglong> updatedAuthorIDs = toAuthorSet(pub->authors());
     QSet<qulonglong> storedAuthorIDs = authorIDs(pub->id()).toSet();
 
-    bool ok = true;
-
     qDebug() << "updatedAuthors" << updatedAuthorIDs;
     qDebug() << "storedAuthors" << storedAuthorIDs;
 
     qDebug() << "Added authors" << updatedAuthorIDs - storedAuthorIDs;
     qDebug() << "Removed authors" << storedAuthorIDs - updatedAuthorIDs;
 
+    QueryExecutor executor;
+
     if(updatedAuthorIDs != storedAuthorIDs) {
 
-        QSqlQuery query(database());
-        ok &= query.prepare("DELETE FROM publication_author WHERE publicationId = :publicationId");
-        query.bindValue(":publicationId", pub->id());
-        ok &= query.exec();
-
-        debug(query);
+        executor.remove("publication_author", makeQueryParameters("publicationId", pub->id()));
 
         foreach(qulonglong aid, updatedAuthorIDs) {
 
-            QSqlQuery insert(database());
-            ok &= insert.prepare("INSERT INTO publication_author(publicationId, authorId) VALUES(:publicationId, :authorId)");
-            insert.bindValue(":publicationId", pub->id());
-            insert.bindValue(":authorId", aid);
-            ok &= insert.exec();
-
-            debug(insert);
+            QueryParameters params;
+            params.insert("publicationId", pub->id());
+            params.insert("authorId", aid);
+            executor.insert("publication_author", params);
         }
     }
 
@@ -329,16 +292,10 @@ bool SQLiteDocumentDAO::updateAuthors(Document::Ptr pub)
 IDList SQLiteDocumentDAO::authorIDs(qulonglong pubId) const
 {
     IDList ret;
-    bool ok = true;
+    QSqlQuery query = QueryExecutor().select("publication_author", QStringList(),
+                                             makeQueryParameters("publicationId", pubId));
 
-    QSqlQuery query(database());
-    ok &= query.prepare("SELECT * from publication_author WHERE publicationId = :id");
-    query.bindValue(":id", pubId);
-    ok &= query.exec();
-
-    debug(query);
-
-    while(ok && query.next()) {
+    while(query.next()) {
         ret.append(query.record().value("authorId").toULongLong());
     }
 

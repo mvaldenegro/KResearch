@@ -17,6 +17,7 @@
 
 #include "SQLiteJournalDAO.h"
 #include <library/sqlite/SQLiteRepository.h>
+#include <library/sqlite/QueryExecutor.h>
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -38,35 +39,24 @@ Journal::Ptr SQLiteJournalDAO::findById(qulonglong id) const
         return repository()->journals()->find(id);
     }
 
-    QSqlQuery query(database());
-    bool ok = true;
-    ok &= query.prepare("SELECT * FROM journal WHERE id = :id");
-    query.bindValue(":id", id);
-    ok &= query.exec();
+    QSqlQuery query = QueryExecutor().select("journal", QStringList(), makeQueryParameters("id", id));
 
-    debug(query);
+    if(query.next()) {
 
-    if(ok) {
+        QSqlRecord record = query.record();
+        Journal::Ptr journal = Journal::Ptr(new Journal());
 
-        if(query.next()) {
+        journal->setId(id);
+        journal->setName(record.value("name").toString());
+        journal->setPublisher(record.value("publisher").toString());
+        journal->setUrl(record.value("url").toString());
+        journal->setJournalPolicy(JournalPolicy::fromUInt(record.value("policy").toUInt()));
 
-            QSqlRecord record = query.record();
-            qulonglong id = record.value("id").toULongLong();
-            Journal::Ptr journal = Journal::Ptr(new Journal());
+        repository()->journals()->insert(id, journal);
 
-            journal->setId(id);
-            journal->setName(record.value("name").toString());
-            journal->setPublisher(record.value("publisher").toString());
-            journal->setUrl(record.value("url").toString());
-            journal->setJournalPolicy(JournalPolicy::fromUInt(record.value("policy").toUInt()));
+        emit dataChanged();
 
-            repository()->journals()->insert(id, journal);
-
-            emit dataChanged();
-
-            return journal;
-        }
-
+        return journal;
     }
 
     return Journal::Ptr();
@@ -74,16 +64,10 @@ Journal::Ptr SQLiteJournalDAO::findById(qulonglong id) const
 
 Journal::Ptr SQLiteJournalDAO::findByName(const QString& name) const
 {
-    QSqlQuery query(database());
-    bool ok = true;
-    ok &= query.prepare("SELECT id FROM journal WHERE name = :name");
-    query.bindValue(":name", name);
-    ok &= query.exec();
+    QVariant id = QueryExecutor().columnValue("journal", "id", makeQueryParameters("name", name));
 
-    debug(query);
-
-    if(ok && query.next()) {
-        return findById(query.record().value("id").toULongLong());
+    if(id.isValid()) {
+        return findById(id.toULongLong());
     }
 
     return Journal::Ptr(0);
@@ -117,43 +101,23 @@ bool SQLiteJournalDAO::save(Journal::Ptr journal)
         return false;
     }
 
-    bool ok = true;
-    database().transaction();
+    QueryExecutor executor;
+    QueryParameters params;
+    params.insert("name", journal->name());
+    params.insert("publisher", journal->publisher());
+    params.insert("url", journal->url());
+    params.insert("policy", journal->journalPolicy().toUInt());
 
-    qDebug() << "Transaciton ok?" << ok;
-
-    QSqlQuery query(database());
-    ok &= query.prepare("INSERT INTO journal(name, publisher, url, policy) "
-                        "VALUES(:name, :publisher, :url, :policy)");
-
-    qDebug() << "Prepare ok?" << ok;
-
-    query.bindValue(":name", journal->name());
-    query.bindValue(":publisher", journal->publisher());
-    query.bindValue(":url", journal->url());
-    query.bindValue(":policy", journal->journalPolicy().toUInt());
-    ok &= query.exec();
-
-    qDebug() << "Query ok?" << ok;
-
-    debug(query);
+    bool ok = executor.insert("journal", params);
 
     if(ok) {
-        qulonglong id = lastInsertRowID();
+        qulonglong id = executor.lastInsertID();
         journal->setId(id);
 
         repository()->journals()->insert(id, journal);
-    } else {
-        qDebug() << "Query failed!?";
-    }
 
-    if(!ok) {
-        ok &= database().rollback();
-    } else {
-        ok &= database().commit();
+        emit dataChanged();
     }
-
-    emit dataChanged();
 
     return ok;
 }
@@ -164,21 +128,13 @@ bool SQLiteJournalDAO::update(Journal::Ptr journal)
         return false;
     }
 
-    bool ok = true;
+    QueryParameters params;
+    params.insert("name", journal->name());
+    params.insert("publisher", journal->publisher());
+    params.insert("url", journal->url());
+    params.insert("policy", journal->journalPolicy().toUInt());
 
-    QSqlQuery query(database());
-    ok &= query.prepare("UPDATE journal SET name = :name, publisher = :publisher, url = :url,"
-                        " policy = :policy "
-                        "WHERE id = :id");
-
-    query.bindValue(":id", journal->id());
-    query.bindValue(":name", journal->name());
-    query.bindValue(":publisher", journal->publisher());
-    query.bindValue(":url", journal->url());
-    query.bindValue(":policy", journal->journalPolicy().toUInt());
-    ok &= query.exec();
-
-    debug(query);
+    bool ok = QueryExecutor().update("journal", makeQueryParameters("id", journal->id()), params);
 
     emit dataChanged();
 

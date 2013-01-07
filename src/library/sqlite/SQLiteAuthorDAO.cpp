@@ -17,6 +17,7 @@
 
 #include "SQLiteAuthorDAO.h"
 #include <library/sqlite/SQLiteRepository.h>
+#include <library/sqlite/QueryExecutor.h>
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -38,52 +39,37 @@ Author::Ptr SQLiteAuthorDAO::findById(qulonglong id) const
         return repository()->authors()->find(id);
     }
 
-    QSqlQuery query(database());
-    bool ok = true;
-    ok &= query.prepare("SELECT * FROM author WHERE id = :id");
-    query.bindValue(":id", id);
-    ok &= query.exec();
+    QSqlQuery query = QueryExecutor().select("author", QStringList(), makeQueryParameters("id", id));
 
-    debug(query);
+    if(query.next()) {
 
-    if(ok) {
+        QSqlRecord record = query.record();
+        Author::Ptr author = Author::Ptr(new Author());
 
-        if(query.next()) {
+        author->setId(id);
+        author->setFirstName(record.value("firstName").toString());
+        author->setLastName(record.value("lastName").toString());
+        author->setEmailAddress(record.value("emailAddress").toString());
+        author->setAffiliation(record.value("affiliation").toString());
 
-            QSqlRecord record = query.record();
-            qulonglong id = record.value("id").toULongLong();
-            Author::Ptr author = Author::Ptr(new Author());
+        repository()->authors()->insert(id, author);
 
-            author->setId(id);
-            author->setFirstName(record.value("firstName").toString());
-            author->setLastName(record.value("lastName").toString());
-            author->setEmailAddress(record.value("emailAddress").toString());
-            author->setAffiliation(record.value("affiliation").toString());
+        emit dataChanged();
 
-            repository()->authors()->insert(id, author);
-
-            emit dataChanged();
-
-            return author;
-        }
-
+        return author;
     }
 
-    return Author::Ptr();
+    return Author::Ptr(0);
 }
 
 Author::Ptr SQLiteAuthorDAO::findByFullName(const QString& firstName, const QString& lastName) const
 {
-    QSqlQuery query(database());
-    bool ok = true;
-    ok &= query.prepare("SELECT id FROM author WHERE firstName = :firstName AND lastName = :lastName");
-    query.bindValue(":firstName", firstName);
-    query.bindValue(":lastName", lastName);
-    ok &= query.exec();
+    QueryParameters params;
+    params.insert("firstName", firstName);
+    params.insert("lastName", lastName);
+    QSqlQuery query = QueryExecutor().select("author", QStringList() << "id", params);
 
-    debug(query);
-
-    if(ok && query.next()) {
+    if(query.next()) {
         return findById(query.record().value("id").toULongLong());
     }
 
@@ -118,43 +104,22 @@ bool SQLiteAuthorDAO::save(Author::Ptr author)
         return false;
     }
 
-    bool ok = true;
-    database().transaction();
-
-    qDebug() << "Transaciton ok?" << ok;
-
-    QSqlQuery query(database());
-    ok &= query.prepare("INSERT INTO author(firstName, lastName, emailAddress, affiliation) "
-                        "VALUES(:firstName, :lastName, :emailAddress, :affiliation)");
-
-    qDebug() << "Prepare ok?" << ok;
-
-    query.bindValue(":firstName", author->firstName());
-    query.bindValue(":lastName", author->lastName());
-    query.bindValue(":emailAddress", author->emailAddress());
-    query.bindValue(":affiliation", author->affiliation());
-    ok &= query.exec();
-
-    qDebug() << "Query ok?" << ok;
-
-    debug(query);
+    QueryExecutor executor;
+    QueryParameters params;
+    params.insert("firstName", author->firstName());
+    params.insert("lastName", author->lastName());
+    params.insert("emailAddress", author->emailAddress());
+    params.insert("affiliation", author->affiliation());
+    bool ok = executor.insert("author", params);
 
     if(ok) {
-        qulonglong id = lastInsertRowID();
+        qulonglong id = executor.lastInsertID();
         author->setId(id);
 
         repository()->authors()->insert(id, author);
-    } else {
-        qDebug() << "Query failed!?";
-    }
 
-    if(!ok) {
-        ok &= database().rollback();
-    } else {
-        ok &= database().commit();
+        emit dataChanged();
     }
-
-    emit dataChanged();
 
     return ok;
 }
@@ -165,21 +130,12 @@ bool SQLiteAuthorDAO::update(Author::Ptr author)
         return false;
     }
 
-    bool ok = true;
-
-    QSqlQuery query(database());
-    ok &= query.prepare("UPDATE author SET firstName = :firstName, lastName = :lastName, emailAddress = :emailAddress,"
-                        " affiliation = :affiliation "
-                        "WHERE id = :id");
-
-    query.bindValue(":id", author->id());
-    query.bindValue(":firstName", author->firstName());
-    query.bindValue(":lastName", author->lastName());
-    query.bindValue(":emailAddress", author->emailAddress());
-    query.bindValue(":affiliation", author->affiliation());
-    ok &= query.exec();
-
-    debug(query);
+    QueryParameters params;
+    params.insert("firstName", author->firstName());
+    params.insert("lastName", author->lastName());
+    params.insert("emailAddress", author->emailAddress());
+    params.insert("affiliation", author->affiliation());
+    bool ok = QueryExecutor().update("author", makeQueryParameters("id", author->id()), params);
 
     emit dataChanged();
 

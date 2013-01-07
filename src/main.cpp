@@ -22,8 +22,6 @@ int main (int argc, char *argv[])
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication app;
 
-    //qDebug() << PDFDocumentDialog::selectString("/home/mvaldenegro/cf-vallejos_ps.pdf");
-
     LibraryManager *libmanager = new LibraryManager();
 
     MainWindow *window = new MainWindow();

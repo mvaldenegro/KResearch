@@ -19,6 +19,7 @@
 
 #include <import/DocumentImportWizard.h>
 #include <import/importers/PDFDocumentImporter.h>
+#include <import/importers/BibtexDocumentImporter.h>
 #include <library/dao/DocumentDAO.h>
 
 #include <QFileInfo>
@@ -36,6 +37,7 @@ DocumentImportService::DocumentImportService(DocumentDAO *pubDAO)
     mSelf = this;
 
     registerImporter(new PDFDocumentImporter());
+    registerImporter(new BibtexDocumentImporter());
 }
 
 DocumentImportService::~DocumentImportService()
@@ -81,7 +83,7 @@ bool DocumentImportService::multipleImportIntoLibrary(Document::List docs)
 Document::List DocumentImportService::import(const QString& localFilename) const
 {
     Document::List ret;
-    KMimeType::Ptr mimeType = KMimeType::findByFileContent(localFilename);
+    KMimeType::Ptr mimeType = KMimeType::findByPath(localFilename);
     DocumentImporter *importer = importerForMimeType(mimeType);
 
     qDebug() << "Finding importer for mimeType" << mimeType->name();

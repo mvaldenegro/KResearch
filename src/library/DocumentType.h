@@ -23,12 +23,8 @@
 
 #include <library/TypedEnum.h>
 
-class PT
+enum class DocumentType : unsigned int
 {
-    public:
-
-        enum Type
-        {
             Unknown                 = 0,
             Unpublished             = 1,
             Article                 = 2,
@@ -44,32 +40,10 @@ class PT
             TechnicalDocumentation  = 12,
             OtherDocument           = 1000,
             Invalid                 = 1001
-        };
-
-        static QHash<unsigned int, QString> toStringHash()
-        {
-            QHash<unsigned int, QString> ret;
-
-            ret.insert(Unknown                 , "Unknown");
-            ret.insert(Unpublished             , "Unpublished");
-            ret.insert(Article                 , "Article");
-            ret.insert(ConferenceArticle       , "Conference Article");
-            ret.insert(Book                    , "Book");
-            ret.insert(Booklet                 , "Booklet");
-            ret.insert(BookChapter             , "Book Chapter");
-            ret.insert(BookPart                , "Book part");
-            ret.insert(BachelorThesis          , "Bachelor Thesis");
-            ret.insert(MasterThesis            , "Master Thesis");
-            ret.insert(DoctoralThesis          , "Doctoral Thesis");
-            ret.insert(TechnicalReport         , "Technical Report");
-            ret.insert(TechnicalDocumentation  , "Technical Documentation");
-            ret.insert(OtherDocument           , "Other document type");
-
-            return ret;
-        }
-
 };
 
-typedef TypedEnum<PT> DocumentType;
+QStringList documentTypeStringValues();
+QString documentTypeToString(const DocumentType& type);
+DocumentType stringToDocumentType(const QString& str);
 
 #endif /* PUBLICATIONTYPE_H_ */

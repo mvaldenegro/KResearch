@@ -61,7 +61,7 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
         pub->setDoi(record.value("doi").toString());
         pub->setIsbn(record.value("isbn").toString());
         pub->setLocalUrl(record.value("localURL").toString());
-        pub->setType(DocumentType::fromUInt(record.value("type").toUInt()));
+        pub->setType(static_cast<DocumentType>(record.value("type").toUInt()));
         pub->setPublished(record.value("isPublished").toBool());
         pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
 
@@ -187,7 +187,7 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     params.insert("doi", pub->doi());
     params.insert("isbn", pub->isbn());
     params.insert("localURL", pub->localUrl());
-    params.insert("type", pub->type().toUInt());
+    params.insert("type", static_cast<uint>(pub->type()));
     params.insert("isPublished", pub->isPublished());
     params.insert("isPeerReviewed", pub->isPeerReviewed());
 
@@ -235,7 +235,7 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
     params.insert("doi", pub->doi());
     params.insert("isbn", pub->isbn());
     params.insert("localURL", pub->localUrl());
-    params.insert("type", pub->type().toUInt());
+    params.insert("type", static_cast<uint>(pub->type()));
     params.insert("isPublished", pub->isPublished());
     params.insert("isPeerReviewed", pub->isPeerReviewed());
 

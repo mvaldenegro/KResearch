@@ -78,7 +78,7 @@ QString PDFDocumentImporter::getTitle(Poppler::Document *doc)
 {
     if(doc) {
         if(doc->infoKeys().contains("Title")) {
-            return doc->info("Title");
+            return StringUtils::sanitize(doc->info("Title"));
         }
     }
 

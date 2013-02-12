@@ -61,7 +61,7 @@ void SQLiteRepository::populate()
         authorDAO()->findById(aid);
     }
 
-    IDList pubs = allIDs(database(), "publication");
+    IDList pubs = allIDs(database(), "document");
 
     foreach(qulonglong pid, pubs) {
         publicationDAO()->findById(pid);

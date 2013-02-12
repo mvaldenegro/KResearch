@@ -44,6 +44,72 @@ class StringUtils
 
             return ret;
         }
+
+        inline static QString removeBraces(const QString& str)
+        {
+            QString tmp = QString(str).remove('{');
+            return tmp.remove('}');
+        }
+
+    public:
+        /*This function splits a QString at each comma, but skips splitting between pairs of quotes (" ... "),
+         * or between braces ({ .... }).
+         */
+        inline static QStringList splitWithCommas(const QString& str)
+        {
+            const QChar comma = QChar(',');
+            const QChar quote = QChar('"');
+            const QChar openingBrace = QChar('{');
+            const QChar closingBrace = QChar('}');
+
+            QStringList ret;
+            int start = 0;
+            int i = 0;
+
+            for(i = 0; i < str.length(); i++) {
+                if(str[i] == comma) {
+                    QString part = str.mid(start, i - start);
+                    start = i+1;
+                    ret.append(part);
+                }
+
+                if(str[i] == quote) {
+                    for(i++; str[i] != quote; i++) {}
+                }
+
+                if(str[i] == openingBrace) {
+                    for(i++; str[i] != closingBrace; i++) {}
+                }
+            }
+
+            ret.append(str.mid(start, i - start));
+
+            return ret;
+        }
+
+        inline static QString serialize(const QStringList& strings)
+        {
+            QStringList tmp;
+
+            for(QString str: strings) {
+                tmp += QString("{") + str + QString("}");
+            }
+
+            return tmp.join(",");
+        }
+
+        inline static QStringList deserialize(const QString& str)
+        {
+            QStringList tmp = splitWithCommas(str);
+            QStringList ret;
+
+            for(QString s: tmp) {
+                ret += removeBraces(s);
+            }
+
+            return ret;
+        }
+
 };
 
 #endif /* STRINGUTILS_H_ */

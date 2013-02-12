@@ -35,11 +35,7 @@ class PDFDocumentImporter : public DocumentImporter
         Document::List import(const QString& localFilename) const;
         Document::List import(const KUrl& url) const;
 
-
     private:
-
-        Author::List parseAuthors(const QStringList& authors) const;
-
         static QString getTitle(Poppler::Document *doc);
         static QStringList getAuthors(Poppler::Document *doc);
         static QStringList getKeywords(Poppler::Document *doc);

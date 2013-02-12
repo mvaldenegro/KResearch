@@ -19,6 +19,7 @@
 #define PUBLICATIONMODEL_H_
 
 #include <QAbstractItemModel>
+#include <library/Author.h>
 
 #include <library/dao/DocumentDAO.h>
 #include <library/dao/JournalDAO.h>
@@ -55,7 +56,6 @@ class DocumentModel : public QAbstractItemModel
         QVariant handleColumnNames(int column) const;
         QVariant handleRead(Document::Ptr pub, int column) const;
         bool handleWrite(Document::Ptr pub, const QVariant& value, int column);
-        QString formatAuthors(Author::List authors) const;
 
         DocumentDAO *mPublicationDAO;
         JournalDAO *mJournalDAO;

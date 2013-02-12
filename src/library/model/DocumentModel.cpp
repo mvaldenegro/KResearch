@@ -208,7 +208,7 @@ QVariant DocumentModel::handleRead(Document::Ptr pub, int column) const
         }
 
         case 1: {
-            return formatAuthors(pub->authors());
+            return pub->shortAuthors();
         }
 
         case 2: {
@@ -265,15 +265,4 @@ bool DocumentModel::handleWrite(Document::Ptr pub, const QVariant& value, int co
     }
 
     return false;
-}
-
-QString DocumentModel::formatAuthors(Author::List authors) const
-{
-    QStringList authorsList;
-
-    foreach(Author::Ptr author, authors) {
-        authorsList += (author->fullName());
-    }
-
-    return authorsList.join(", ");
 }

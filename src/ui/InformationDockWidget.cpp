@@ -55,7 +55,7 @@ void InformationDockWidget::display(Document::Ptr pub)
         qDebug() << pub->title() << "selected";
 
         mWidgetUi->titleLabel->setText(pub->title());
-        mWidgetUi->authorsLabel->setText(pub->authorNames().join(", "));
+        mWidgetUi->authorsLabel->setText(pub->longAuthors());
         mWidgetUi->abstractLabel->setText(pub->abstract());
 
         clear();

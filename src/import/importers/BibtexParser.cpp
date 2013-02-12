@@ -21,12 +21,36 @@
 #include <QStringList>
 #include <QDebug>
 
+#include <util/StringUtils.h>
+#include <util/NameUtils.h>
+
 BibtexParser::BibtexParser()
 {
 }
 
 BibtexParser::~BibtexParser()
 {
+}
+
+inline QString cleanup(const QString& input)
+{
+    QString tmp = input;
+    tmp = tmp.remove('\n');
+    tmp = tmp.remove('}');
+    tmp = tmp.remove('{');
+
+    return tmp.trimmed();
+}
+
+inline QStringList cleanup(const QStringList& input)
+{
+    QStringList ret;
+
+    for(QString s: input) {
+        ret += cleanup(s);
+    }
+
+    return ret;
 }
 
 static QRegExp entryRegexp = QRegExp("@([a-zA-Z]+)\\s*\\{(.+)\\}");
@@ -66,30 +90,9 @@ Document::List BibtexParser::parse(const QString& str) const
     return ret;
 }
 
-QString BibtexParser::cleanup(const QString& input) const
-{
-    QString tmp = input;
-    tmp = tmp.remove('\n');
-    tmp = tmp.remove('}');
-    tmp = tmp.remove('{');
-
-    return tmp.trimmed();
-}
-
-QStringList BibtexParser::cleanup(const QStringList& input) const
-{
-    QStringList ret;
-
-    foreach(QString s, input) {
-        ret += cleanup(s);
-    }
-
-    return ret;
-}
-
 QString BibtexParser::removeQuotes(const QString& input) const
 {
-    return QString(input).remove('"');
+    return QString(input).remove('"').trimmed();
 }
 
 typedef QMap<QString, QString> StringMap;
@@ -107,19 +110,18 @@ class BibtexDocumentFiller
 
         virtual Document::Ptr fillDocument(const StringMap& data) const = 0;
 
-        Author::List parseAuthors(const QString& authorString) const
+        QStringList parseAuthors(const QString& authorString) const
         {
-            Author::List authors;
-            QStringList authorParts = authorString.split("and");
+            QStringList tmp = authorString.split("and");
+            QStringList ret;
 
-            foreach(QString authorPart, authorParts) {
-                Author::Ptr author = new Author();
-                author->setFirstName(authorPart);
+            for(QString rawName: tmp) {
+                ret += NameUtils::normalize(rawName);
 
-                authors.append(author);
+                qDebug() << "formatted name" << NameUtils::normalize(rawName);
             }
 
-            return authors;
+            return cleanup(ret);
         }
 };
 
@@ -264,43 +266,9 @@ BibtexDocumentFiller *dispatchFiller(const QString& type)
     return nullFiller;
 }
 
-const QChar comma = QChar(',');
-const QChar quote = QChar('"');
-const QChar openingBrace = QChar('{');
-const QChar closingBrace = QChar('}');
-
-//This function splits a QString at each comma, but skips splitting between pairs of quotes (" ... "),
-//or between braces ({ .... }).
-inline QStringList splitWithComas(const QString& str)
-{
-    QStringList ret;
-    int start = 0;
-    int i = 0;
-
-    for(i = 0; i < str.length(); i++) {
-        if(str[i] == comma) {
-            QString part = str.mid(start, i - start);
-            start = i+1;
-            ret.append(part);
-        }
-
-        if(str[i] == quote) {
-            for(i++; str[i] != QChar('"'); i++) {}
-        }
-
-        if(str[i] == openingBrace) {
-            for(i++; str[i] != closingBrace; i++) {}
-        }
-    }
-
-    ret.append(str.mid(start, i - start));
-
-    return ret;
-}
-
 Document::Ptr BibtexParser::fillDocumentData(const QString& type, const QString& rawData) const
 {
-    QStringList data = splitWithComas(rawData);
+    QStringList data = StringUtils::splitWithCommas(rawData);
     StringMap dataMap;
 
     if(data.count() == 0) {

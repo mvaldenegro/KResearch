@@ -139,6 +139,23 @@ qulonglong QueryExecutor::lastInsertID()
     return (qulonglong) -1;
 }
 
+IDList QueryExecutor::queryOneToManyRelation(const QString& oneTableName, const QString& manyTableName, qulonglong id)
+{
+    IDList ret;
+    QString interTable = oneTableName + QString("_") + manyTableName;
+    QString oneColumn = oneTableName + QString("Id");
+    QString manyColumn = manyTableName + QString("Id");
+
+    QSqlQuery query = select(interTable, QStringList(), makeQueryParameters(oneColumn, id));
+
+
+    while(query.next()) {
+        ret.append(query.record().value(manyColumn).toULongLong());
+    }
+
+    return ret;
+}
+
 bool QueryExecutor::executeQuery(const QString& queryString, const QueryParameters& params, QSqlQuery *ret)
 {
     QSqlQuery query(database());

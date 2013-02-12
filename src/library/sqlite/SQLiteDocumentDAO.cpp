@@ -20,6 +20,8 @@
 #include <library/sqlite/Transaction.h>
 #include <library/sqlite/QueryExecutor.h>
 
+#include <util/StringUtils.h>
+
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QVariant>
@@ -64,17 +66,18 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
         pub->setType(static_cast<DocumentType>(record.value("type").toUInt()));
         pub->setPublished(record.value("isPublished").toBool());
         pub->setPeerReviewed(record.value("isPeerReviewed").toBool());
+        pub->setKeywords(QStringList());
+        pub->setSeries(record.value("series").toString());
+        pub->setSubTitle(record.value("subTitle").toString());
+        pub->setPages(PageRange::fromString(record.value("pages").toString()));
 
         repository()->publications()->insert(id, pub);
 
-        IDList idAuthors = authorIDs(id);
-        Author::List authors;
+        QString authors = record.value("authors").toString();
+        pub->setAuthors(StringUtils::deserialize(authors));
 
-        foreach(qulonglong aid, idAuthors) {
-            authors.append(repository()->authorDAO()->findById(aid));
-        }
-
-        pub->setAuthors(authors);
+        QString editors = record.value("editors").toString();
+        pub->setEditors(StringUtils::deserialize(editors));
 
         qulonglong jid = record.value("journalId").toULongLong();
 
@@ -190,6 +193,12 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     params.insert("type", static_cast<uint>(pub->type()));
     params.insert("isPublished", pub->isPublished());
     params.insert("isPeerReviewed", pub->isPeerReviewed());
+    //params.insert("keywords", pub->keywords());
+    params.insert("series", pub->series());
+    params.insert("subTitle", pub->subTitle());
+    params.insert("pages", pub->pages().toString());
+    params.insert("authors", StringUtils::serialize(pub->authors()));
+    params.insert("editors", StringUtils::serialize(pub->editors()));
 
     if(pub->journal()) {
         params.insert("journalId", pub->journal()->id());
@@ -202,8 +211,6 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     if(ok) {
         qulonglong id = executor.lastInsertID();
         pub->setId(id);
-
-        updateAuthors(pub);
 
         repository()->journalDAO()->saveOrUpdate(pub->journal());
         repository()->publications()->insert(id, pub);
@@ -238,6 +245,12 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
     params.insert("type", static_cast<uint>(pub->type()));
     params.insert("isPublished", pub->isPublished());
     params.insert("isPeerReviewed", pub->isPeerReviewed());
+    //params.insert("keywords", pub->keywords());
+    params.insert("series", pub->series());
+    params.insert("subTitle", pub->subTitle());
+    params.insert("pages", pub->pages().toString());
+    params.insert("authors", StringUtils::serialize(pub->authors()));
+    params.insert("editors", StringUtils::serialize(pub->editors()));
 
     if(pub->journal()) {
         params.insert("journalId", pub->journal()->id());
@@ -248,67 +261,8 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
     bool ok = QueryExecutor().update("publication", makeQueryParameters("id", pub->id()), params);
 
     if(ok) {
-        updateAuthors(pub);
-
         emit dataChanged();
     }
 
     return ok;
-}
-
-bool SQLiteDocumentDAO::updateAuthors(Document::Ptr pub)
-{
-    foreach(Author::Ptr author, pub->authors()) {
-        repository()->authorDAO()->saveOrUpdate(author);
-    }
-
-    QSet<qulonglong> updatedAuthorIDs = toAuthorSet(pub->authors());
-    QSet<qulonglong> storedAuthorIDs = authorIDs(pub->id()).toSet();
-
-    qDebug() << "updatedAuthors" << updatedAuthorIDs;
-    qDebug() << "storedAuthors" << storedAuthorIDs;
-
-    qDebug() << "Added authors" << updatedAuthorIDs - storedAuthorIDs;
-    qDebug() << "Removed authors" << storedAuthorIDs - updatedAuthorIDs;
-
-    QueryExecutor executor;
-
-    if(updatedAuthorIDs != storedAuthorIDs) {
-
-        executor.remove("publication_author", makeQueryParameters("publicationId", pub->id()));
-
-        foreach(qulonglong aid, updatedAuthorIDs) {
-
-            QueryParameters params;
-            params.insert("publicationId", pub->id());
-            params.insert("authorId", aid);
-            executor.insert("publication_author", params);
-        }
-    }
-
-    return true;
-}
-
-IDList SQLiteDocumentDAO::authorIDs(qulonglong pubId) const
-{
-    IDList ret;
-    QSqlQuery query = QueryExecutor().select("publication_author", QStringList(),
-                                             makeQueryParameters("publicationId", pubId));
-
-    while(query.next()) {
-        ret.append(query.record().value("authorId").toULongLong());
-    }
-
-    return ret;
-}
-
-QSet<qulonglong> SQLiteDocumentDAO::toAuthorSet(Author::List authors) const
-{
-    QSet<qulonglong> ret;
-
-    foreach(Author::Ptr author, authors) {
-        ret.insert(author->id());
-    }
-
-    return ret;
 }

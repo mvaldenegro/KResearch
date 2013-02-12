@@ -58,7 +58,7 @@ Document::List PDFDocumentImporter::import(const QString& localFilename) const
 
         ret->setTitle(title);
         ret->setKeywords(keywords);
-        ret->setAuthors(parseAuthors(authors));
+        ret->setAuthors(authors);
         ret->setLocalUrl(localFilename);
 
         delete doc;
@@ -70,35 +70,6 @@ Document::List PDFDocumentImporter::import(const QString& localFilename) const
 Document::List PDFDocumentImporter::import(const KUrl& url) const
 {
     return import(url.toLocalFile());
-}
-
-Author::List PDFDocumentImporter::parseAuthors(const QStringList& authors) const
-{
-    AuthorDAO *authorDAO = Repository::self()->authorDAO();
-    Author::List ret;
-
-    foreach(QString authorNames, authors) {
-        QStringList parts = authorNames.split(' ');
-        Author::Ptr author;
-
-        if(parts.count() > 0) {
-            QString firstName = parts[0];
-            QString lastName = (parts.count() > 1) ? parts[1] : QString();
-
-            author = authorDAO->findByFullName(firstName, lastName);
-
-            if(!author) {
-                author = new Author();
-
-                author->setFirstName(firstName);
-                author->setLastName(lastName);
-            }
-        }
-
-        ret.append(author);
-    }
-
-    return ret;
 }
 
 static QRegExp separators = QRegExp(",|;|and");
@@ -131,12 +102,12 @@ QStringList PDFDocumentImporter::getAuthors(Poppler::Document *doc)
 QStringList PDFDocumentImporter::getKeywords(Poppler::Document *doc)
 {
     if(doc) {
-            if(doc->infoKeys().contains("Keywords")) {
-                QString keywords = doc->info("Keywords");
+        if(doc->infoKeys().contains("Keywords")) {
+            QString keywords = doc->info("Keywords");
 
-                return StringUtils::sanitize(keywords.split(separators, QString::SkipEmptyParts));
-            }
+            return StringUtils::sanitize(keywords.split(separators, QString::SkipEmptyParts));
         }
+    }
 
-        return QStringList();
+    return QStringList();
 }

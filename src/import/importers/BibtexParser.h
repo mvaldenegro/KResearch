@@ -29,8 +29,6 @@ class BibtexParser
         Document::List parse(const QString& str) const;
 
     private:
-        QString cleanup(const QString& input) const;
-        QStringList cleanup(const QStringList& input) const;
         QString removeQuotes(const QString& input) const;
         DocumentType typeFromString(const QString& type) const;
 

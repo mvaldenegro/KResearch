@@ -117,26 +117,7 @@ void PublicationEditDialog::saveAuthors()
     QStringList authors = mEditWidget->currentAuthorList();
     Author::List authList;
 
-    foreach(QString authorStr, authors) {
-
-        QStringList parts = authorStr.split(',');
-        QString lastName = parts[0].trimmed();
-        QString firstName = parts[1].trimmed();
-
-        Author::Ptr candidate = Repository::self()->authorDAO()->findByFullName(firstName, lastName);
-
-        if(!candidate) {
-
-            candidate = new Author();
-
-            candidate->setFirstName(firstName);
-            candidate->setLastName(lastName);
-        }
-
-        authList.append(candidate);
-    }
-
-    mPub->setAuthors(authList);
+    mPub->setAuthors(authors);
 }
 
 Document::Ptr PublicationEditDialog::editPublication(Document::Ptr pub)

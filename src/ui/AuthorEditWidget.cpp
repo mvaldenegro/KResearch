@@ -41,10 +41,10 @@ AuthorEditWidget::~AuthorEditWidget()
 {
 }
 
-void AuthorEditWidget::setAuthorList(Author::List authors)
+void AuthorEditWidget::setAuthorList(const QStringList& authors)
 {
-    foreach(Author::Ptr author, authors) {
-        new QListWidgetItem(author->editableFullName(), authorList);
+    for(QString author: authors) {
+        new QListWidgetItem(author, authorList);
     }
 }
 

@@ -17,6 +17,33 @@
 
 #include "Document.h"
 
+PageRange::PageRange()
+: mPageStart(0), mPageEnd(0)
+{
+}
+
+PageRange::~PageRange()
+{
+}
+
+QString PageRange::toString()
+{
+    return QString("%1;%2").arg(pageStart()).arg(pageEnd());
+}
+
+PageRange PageRange::fromString(const QString& str)
+{
+    QStringList parts = str.split(';');
+    PageRange ret;
+
+    if(parts.count() == 2) {
+        ret.setPageStart(parts[0].toInt());
+        ret.setPageEnd(parts[1].toInt());
+    }
+
+    return ret;
+}
+
 Document::Document()
 : BaseEntity(), mYear(0), mVolume(0), mNumber(0), mIsPublished(false), mIsPeerReviewed(false), mJournal(0)
 {

@@ -46,11 +46,6 @@ class SQLiteDocumentDAO : public DocumentDAO, public SQLiteBaseDAO
 
         bool save(Document::Ptr pub);
         bool update(Document::Ptr pub);
-
-        bool updateAuthors(Document::Ptr pub);
-
-        IDList authorIDs(qulonglong pubId) const;
-        QSet<qulonglong> toAuthorSet(Author::List authors) const;
 };
 
 #endif /* SQLITEPUBLICATIONDAO_H_ */

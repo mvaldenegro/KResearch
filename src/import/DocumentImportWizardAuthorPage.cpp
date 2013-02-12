@@ -54,38 +54,9 @@ DocumentImportWizardAuthorPage::~DocumentImportWizardAuthorPage()
 bool DocumentImportWizardAuthorPage::validatePage()
 {
     QStringList authors = mEditWidget->currentAuthorList();
-    Author::List authList;
-
-    foreach(QString authorStr, authors) {
-
-        QStringList partsComma = authorStr.split(',');
-
-        Author::Ptr candidate = 0;
-
-        if(partsComma.size() > 1) {
-            QString lastName = partsComma[0].trimmed();
-            QString firstName = partsComma[1].trimmed();
-
-            candidate = Repository::self()->authorDAO()->findByFullName(firstName, lastName);
-
-            if(!candidate) {
-
-                candidate = new Author();
-
-                candidate->setFirstName(firstName);
-                candidate->setLastName(lastName);
-            }
-
-        } else {
-            return false;
-        }
-
-        authList.append(candidate);
-    }
-
     DocumentImportWizard *wiz = static_cast<DocumentImportWizard *>(wizard());
 
-    wiz->document()->setAuthors(authList);
+    wiz->document()->setAuthors(authors);
 
     return true;
 }

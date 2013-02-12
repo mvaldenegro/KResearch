@@ -32,7 +32,7 @@ class AuthorEditWidget : public QWidget, public Ui::AuthorEdit
         AuthorEditWidget(QWidget *parent = 0);
         virtual ~AuthorEditWidget();
 
-        void setAuthorList(Author::List authors);
+        void setAuthorList(const QStringList& authors);
         void setLocalUrl(const QString& localUrl);
 
         QStringList currentAuthorList() const;

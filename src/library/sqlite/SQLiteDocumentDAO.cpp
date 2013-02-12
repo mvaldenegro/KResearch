@@ -43,7 +43,7 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
     }
 
     QueryExecutor executor(database());
-    QSqlQuery query = executor.select("publication", QStringList(), makeQueryParameters("id", id));
+    QSqlQuery query = executor.select("document", QStringList(), makeQueryParameters("id", id));
 
     if(query.next()) {
 
@@ -118,7 +118,7 @@ Document::List SQLiteDocumentDAO::findAll() const
 QStringList SQLiteDocumentDAO::journals() const
 {
     QSqlQuery query(database());
-    query.prepare("SELECT DISTINCT journal FROM publication");
+    query.prepare("SELECT DISTINCT journal FROM document");
     query.exec();
 
     QStringList ret;
@@ -137,7 +137,7 @@ QStringList SQLiteDocumentDAO::journals() const
 QStringList SQLiteDocumentDAO::conferences() const
 {
     QSqlQuery query(database());
-    query.prepare("SELECT DISTINCT conference FROM publication");
+    query.prepare("SELECT DISTINCT conference FROM document");
     query.exec();
 
     QStringList ret;
@@ -159,7 +159,7 @@ bool SQLiteDocumentDAO::remove(Document::Ptr entity)
         return false;
     }
 
-    bool ret = QueryExecutor(database()).remove("publication", makeQueryParameters("id", entity->id()));
+    bool ret = QueryExecutor(database()).remove("document", makeQueryParameters("id", entity->id()));
 
     if(ret) {
         repository()->publications()->remove(entity->id());
@@ -206,7 +206,7 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
         params.insert("journalId", QVariant());
     }
 
-    bool ok = executor.insert("publication", params);
+    bool ok = executor.insert("document", params);
 
     if(ok) {
         qulonglong id = executor.lastInsertID();
@@ -258,7 +258,7 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
         params.insert("journalId", QVariant());
     }
 
-    bool ok = QueryExecutor().update("publication", makeQueryParameters("id", pub->id()), params);
+    bool ok = QueryExecutor().update("document", makeQueryParameters("id", pub->id()), params);
 
     if(ok) {
         emit dataChanged();

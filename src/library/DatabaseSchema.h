@@ -27,7 +27,7 @@ QStringList databaseSchema()
                    "policy INTEGER\n"
                    ");");
 
-    ret << QString("CREATE TABLE IF NOT EXISTS publication (\n"
+    ret << QString("CREATE TABLE IF NOT EXISTS document (\n"
                    "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                    "title TEXT NOT NULL,\n"
                    "abstract TEXT,\n"

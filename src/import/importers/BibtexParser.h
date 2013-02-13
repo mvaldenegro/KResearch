@@ -30,8 +30,8 @@ class BibtexParser
 
     private:
         QString removeQuotes(const QString& input) const;
-        DocumentType typeFromString(const QString& type) const;
 
+        Document::Ptr processDocumentString(const QString& docStr) const;
         Document::Ptr fillDocumentData(const QString& type, const QString& data) const;
 };
 

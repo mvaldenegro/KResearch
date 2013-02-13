@@ -53,15 +53,30 @@ inline QStringList cleanup(const QStringList& input)
     return ret;
 }
 
-static QRegExp entryRegexp = QRegExp("@([a-zA-Z]+)\\s*\\{(.+)\\}");
+static QRegExp entryRegexp = QRegExp("([a-zA-Z]+)\\s*\\{(.+)\\}");
 
 Document::List BibtexParser::parse(const QString& str) const
 {
     Document::List ret;
-    int pos = entryRegexp.indexIn(str);
+    QStringList parts = str.split('@', QString::SkipEmptyParts);
+
+    for(QString part: parts) {
+        Document::Ptr parsedDocument = processDocumentString(part);
+
+        if(parsedDocument != nullptr) {
+            ret.append(parsedDocument);
+        }
+    }
+
+    return ret;
+}
+
+Document::Ptr BibtexParser::processDocumentString(const QString& docStr) const
+{
+    int pos = entryRegexp.indexIn(docStr);
 
     if(pos == -1) {
-        return ret;
+        return nullptr;
     }
 
     QStringList entries = entryRegexp.capturedTexts();
@@ -70,7 +85,7 @@ Document::List BibtexParser::parse(const QString& str) const
 
     //Entries size should be a multiple of 2, a pair of bibtex entry type and bibtex entry data.
     if((entries.count() % 2) == 1) {
-        return ret;
+        return nullptr;
     }
 
     for(int i = 0; i < entries.count(); i += 2) {
@@ -80,14 +95,10 @@ Document::List BibtexParser::parse(const QString& str) const
         qDebug() << "Type" << type;
         qDebug() << "Data" << data;
 
-        Document::Ptr document = fillDocumentData(type, data);
-
-        if(document != nullptr) {
-            ret.append(document);
-        }
+        return fillDocumentData(type, data);
     }
 
-    return ret;
+    return nullptr;
 }
 
 QString BibtexParser::removeQuotes(const QString& input) const
@@ -112,7 +123,7 @@ class BibtexDocumentFiller
 
         QStringList parseAuthors(const QString& authorString) const
         {
-            QStringList tmp = authorString.split("and");
+            QStringList tmp = authorString.split(" and ", QString::SkipEmptyParts);
             QStringList ret;
 
             for(QString rawName: tmp) {
@@ -218,6 +229,44 @@ class BibtexConferenceFiller : public BibtexDocumentFiller
         }
 };
 
+class BibtexMiscFiller : public BibtexDocumentFiller
+{
+    public:
+        BibtexMiscFiller() {}
+
+        virtual ~BibtexMiscFiller() {}
+
+        virtual Document::Ptr fillDocument(const StringMap& data) const
+        {
+            Document::Ptr document = new Document();
+
+            //Type
+            document->setType(DocumentType::Unknown);
+
+            //Optional fields
+            document->setTitle(data["title"]);
+            document->setYear(data["year"].toInt());
+            document->setAuthors(parseAuthors(data["author"]));
+
+            if(data.contains("howpublished")) {
+                QString howpub = data["howpublished"];
+
+                if(StringUtils::fuzzyIsURL(howpub)) {
+                    document->setUrl(howpub);
+                }
+            }
+
+            if(data.contains("url")) {
+                document->setUrl(data["url"]);
+            }
+
+            document->setVolume(data["volume"].toInt());
+            document->setNumber(data["number"].toInt());
+
+            return document;
+        }
+};
+
 class BibtexNullFiller : public BibtexDocumentFiller
 {
     public:
@@ -245,7 +294,7 @@ inline QMap<QString, BibtexDocumentFiller *> createFillerMap()
     map.insert("inproceedings"  , new BibtexConferenceFiller());
     map.insert("manual"         , nullptr);
     map.insert("masterthesis"   , nullptr);
-    map.insert("misc"           , nullptr);
+    map.insert("misc"           , new BibtexMiscFiller());
     map.insert("phdthesis"      , nullptr);
     map.insert("proceedings"    , nullptr);
     map.insert("techreport"     , nullptr);
@@ -281,7 +330,7 @@ Document::Ptr BibtexParser::fillDocumentData(const QString& type, const QString&
     qDebug() << "Splitting data" << rawData;
 
     for(int i = 1; i < data.count(); i++) {
-        QStringList parts = data[i].split('=');
+        QStringList parts = data[i].split('=', QString::SkipEmptyParts);
         parts = cleanup(parts);
 
         if(parts.count() != 2) {

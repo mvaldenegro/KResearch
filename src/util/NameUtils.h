@@ -30,7 +30,7 @@ class NameUtils
          */
         inline static QString firstName(const QString& fullName)
         {
-            QStringList parts = fullName.split(' ');
+            QStringList parts = parse(fullName);
 
             if(parts.count() > 0) {
                 return parts[0];
@@ -43,7 +43,7 @@ class NameUtils
          */
         inline static QString lastName(const QString& fullName)
         {
-            QStringList parts = fullName.split(' ');
+            QStringList parts = parse(fullName);
 
             if(parts.count() > 1) {
                 return parts[1];
@@ -71,6 +71,10 @@ class NameUtils
                 return StringUtils::sanitize(parts);
             }
 
+            if(parts.count() == 3) {
+                return StringUtils::sanitize(QStringList() << (parts[0] + QString(" ") + parts[1]) << parts[2]);
+            }
+
             return QStringList() << fullName;
         }
 
@@ -80,7 +84,7 @@ class NameUtils
                 return format(firstAndLastName[0], firstAndLastName[1]);
             }
 
-            return QString();
+            return firstAndLastName.join(" ");
         }
 
         inline static QString format(const QString& firstName, const QString& lastName)

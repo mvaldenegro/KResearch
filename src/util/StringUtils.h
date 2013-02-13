@@ -18,6 +18,7 @@
 #ifndef STRINGUTILS_H_
 #define STRINGUTILS_H_
 
+#include <QUrl>
 #include <QString>
 #include <QStringList>
 
@@ -84,6 +85,19 @@ class StringUtils
 
             ret.append(str.mid(start, i - start));
 
+            return removeEmpty(sanitize(ret));
+        }
+
+        inline static QStringList removeEmpty(const QStringList& strlist)
+        {
+            QStringList ret;
+
+            for(QString str: strlist) {
+                if(!isNullOrEmpty(str)) {
+                    ret += str;
+                }
+            }
+
             return ret;
         }
 
@@ -108,6 +122,13 @@ class StringUtils
             }
 
             return ret;
+        }
+
+        inline static bool fuzzyIsURL(const QString& str)
+        {
+            QUrl url = QUrl::fromUserInput(str);
+
+            return url.isValid();
         }
 
 };

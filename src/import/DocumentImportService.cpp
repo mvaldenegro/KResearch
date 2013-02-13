@@ -53,22 +53,24 @@ bool DocumentImportService::importIntoLibrary(const QString& fileName)
     }
 
     Document::List docs = import(fileName);
-    Document::Ptr doc;
 
-    //TODO: Handle multiple documents imported from one file
-    if(docs.count() > 0) {
-        doc = docs.at(0);
-    } else {
-        doc = new Document();
+    if(docs.count() > 1) {
+
+        return multipleImportIntoLibrary(docs);
+
+    } else if (docs.count() == 1) {
+        Document::Ptr doc = docs.at(0);
+
+        bool ok = DocumentImportWizard::importDocument(doc);
+
+        if(ok) {
+            documentDAO()->saveOrUpdate(doc);
+        }
+
+        return ok;
     }
 
-    bool ok = DocumentImportWizard::importDocument(doc);
-
-    if(ok) {
-        documentDAO()->saveOrUpdate(doc);
-    }
-
-    return ok;
+    return false;
 }
 
 bool DocumentImportService::multipleImportIntoLibrary(Document::List docs)

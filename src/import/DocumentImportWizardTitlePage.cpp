@@ -19,6 +19,9 @@
 #include "DocumentImportWizard.h"
 #include <pdfwidget/PDFDocumentDialog.h>
 
+#include <library/Repository.h>
+#include <util/StringUtils.h>
+
 DocumentImportWizardTitlePage::DocumentImportWizardTitlePage()
 : QWizardPage()
 {
@@ -36,6 +39,8 @@ DocumentImportWizardTitlePage::DocumentImportWizardTitlePage()
     connect(yearButton, SIGNAL(clicked()), this, SLOT(acquireYear()));
     connect(journalButton, SIGNAL(clicked()), this, SLOT(acquireJournal()));
     connect(conferenceButton, SIGNAL(clicked()), this, SLOT(acquireConference()));
+
+    connect(titleEdit, SIGNAL(textChanged(const QString&)), this, SLOT(validateTitle(const QString&)));
 }
 
 DocumentImportWizardTitlePage::~DocumentImportWizardTitlePage()
@@ -72,4 +77,21 @@ void DocumentImportWizardTitlePage::acquireConference()
     QString conference = PDFDocumentDialog::selectString(wiz->document()->localUrl());
     setField("conference", conference.simplified());
 
+}
+
+void DocumentImportWizardTitlePage::validateTitle(const QString& title)
+{
+    bool alreadyExists = false;
+
+    for(Document::Ptr document: Repository::self()->publicationDAO()->findAll()) {
+        if(document->title() == StringUtils::sanitize(title)) {
+            alreadyExists = true;
+        }
+    }
+
+    if(alreadyExists) {
+        titleInfoLabel->setText("There already exists a document with this title.");
+    } else {
+        titleInfoLabel->setText(QString());
+    }
 }

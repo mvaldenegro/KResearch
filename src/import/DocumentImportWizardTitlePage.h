@@ -35,6 +35,8 @@ class DocumentImportWizardTitlePage : public QWizardPage, public Ui::TitlePage
         void acquireYear();
         void acquireJournal();
         void acquireConference();
+
+        void validateTitle(const QString& title);
 };
 
 #endif /* DOCUMENTIMPORTWIZARDTITLEPAGE_H_ */

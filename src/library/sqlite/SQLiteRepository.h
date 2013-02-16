@@ -52,6 +52,11 @@ class SQLiteRepository : public Repository
             return mJournalDAO;
         }
 
+        KeywordDAO * keywordDAO() const
+        {
+            return mKeywordDAO;
+        }
+
         QSqlDatabase database()
         {
             return mDB;
@@ -65,6 +70,7 @@ class SQLiteRepository : public Repository
         AuthorDAO *mAuthorDAO;
         DocumentDAO *mPublicationDAO;
         JournalDAO *mJournalDAO;
+        KeywordDAO *mKeywordDAO;
 };
 
 #endif /* SQLITEOBJECTCACHE_H_ */

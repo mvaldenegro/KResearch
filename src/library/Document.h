@@ -26,6 +26,7 @@
 
 #include <QStringList>
 #include <QString>
+#include <QDate>
 
 /*! Representation of a range of pages in a book, article, etc.
  */
@@ -74,6 +75,84 @@ class PageRange
     private:
         int mPageStart;
         int mPageEnd;
+};
+
+
+/*! Representation of a Date, with a year, and an optional month;
+ */
+class MonthYearDate
+{
+    public:
+
+        MonthYearDate();
+        ~MonthYearDate();
+
+        bool hasMonth() const
+        {
+            return month() > 0;
+        }
+
+        bool isValid() const
+        {
+            return (year() > 0);
+        }
+
+        QString toString() const
+        {
+            return monthToString() + QString(" ") + yearToString();
+        }
+
+        QString monthToString() const
+        {
+            return QDate::longMonthName(month());
+        }
+
+        QString yearToString() const
+        {
+            return QString::number(year());
+        }
+
+        QString parsableToString() const
+        {
+            return QString("%1;%2").arg(month()).arg(year());
+        }
+
+        MonthYearDate fromParsableString(const QString& yearDateStr)
+        {
+            MonthYearDate ret;
+            QStringList parts = yearDateStr.split(';', QString::SkipEmptyParts);
+
+            if(parts.count() == 2) {
+                ret.setMonth(parts[0].toInt());
+                ret.setYear(parts[1].toInt());
+            }
+
+            return ret;
+        }
+
+        int month() const
+        {
+            return mMonth;
+        }
+
+        void setMonth(int month)
+        {
+            mMonth = month;
+        }
+
+        int year() const
+        {
+            return mYear;
+        }
+
+        void setYear(int year)
+        {
+            mYear = year;
+        }
+
+    private:
+        int mYear;
+        int mMonth;
 };
 
 /*! Document representation.
@@ -314,19 +393,6 @@ class Document : public BaseEntity
             this->mVolume = mVolume;
         }
 
-        /*! Year where this document was published or created.
-         */
-
-        int year() const
-        {
-            return mYear;
-        }
-
-        void setYear(int mYear)
-        {
-            this->mYear = mYear;
-        }
-
         /*! Keywords associated with this document, this keywords will be used for search and tagging.
          */
 
@@ -394,10 +460,55 @@ class Document : public BaseEntity
             mSubTitle = superTitle;
         }
 
+        /*! Cite key, for example, for citing in Bibtex.
+         */
+
+        QString citeKey() const
+        {
+            return mCiteKey;
+        }
+
+        void setCiteKey(const QString& citeKey)
+        {
+            mCiteKey = citeKey;
+        }
+
+        /*! Date of publication or creation.
+         */
+
+        MonthYearDate date() const
+        {
+            return mDate;
+        }
+
+        void setDate(MonthYearDate date)
+        {
+            mDate = date;
+        }
+
+        void setYear(int year)
+        {
+            mDate.setYear(year);
+        }
+
+        void setMonth(int month)
+        {
+            mDate.setMonth(month);
+        }
+
+        int year() const
+        {
+            return mDate.year();
+        }
+
+        int month() const
+        {
+            return mDate.month();
+        }
+
 private:
     QString mTitle;
     QString mAbstract;
-    int mYear;
     QString mConference;
     QString mPublisher;
     int mVolume;
@@ -419,6 +530,8 @@ private:
     QString mSubTitle;
     QStringList mEditors;
     PageRange mPages;
+    QString mCiteKey;
+    MonthYearDate mDate;
 };
 
 #endif /* PUBLICATION_H_ */

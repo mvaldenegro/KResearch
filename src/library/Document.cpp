@@ -44,18 +44,26 @@ PageRange PageRange::fromString(const QString& str)
     return ret;
 }
 
+MonthYearDate::MonthYearDate() : mYear(0), mMonth(-1)
+{
+}
+
+MonthYearDate::~MonthYearDate()
+{
+}
+
 Document::Document()
-: BaseEntity(), mYear(0), mVolume(0), mNumber(0), mIsPublished(false), mIsPeerReviewed(false), mJournal(0)
+: BaseEntity(), mVolume(0), mNumber(0), mIsPublished(false), mIsPeerReviewed(false), mJournal(0)
 {
 }
 
 Document::Document(const Document& copy)
-: mTitle(copy.title()), mAbstract(copy.abstract()), mYear(copy.year()),
+: mTitle(copy.title()), mAbstract(copy.abstract()),
   mConference(copy.conference()), mPublisher(copy.publisher()), mVolume(copy.volume()),
   mNumber(copy.number()), mUrl(copy.url()), mDoi(copy.doi()), mIsbn(copy.isbn()),
   mLocalURL(copy.localUrl()), mAuthors(copy.authors()), mIsPublished(copy.isPublished()),
   mIsPeerReviewed(copy.isPeerReviewed()), mType(copy.type()), mJournal(copy.journal()),
-  mKeywords(copy.keywords())
+  mKeywords(copy.keywords()), mDate(copy.date())
 {
 
 }

@@ -55,6 +55,7 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
         pub->setTitle(record.value("title").toString());
         pub->setAbstract(record.value("abstract").toString());
         pub->setYear(record.value("year").toInt());
+        pub->setMonth(record.value("month").toInt());
         pub->setConference(record.value("conference").toString());
         pub->setPublisher(record.value("publisher").toString());
         pub->setVolume(record.value("volume").toInt());
@@ -70,6 +71,7 @@ Document::Ptr SQLiteDocumentDAO::findById(qulonglong id) const
         pub->setSeries(record.value("series").toString());
         pub->setSubTitle(record.value("subTitle").toString());
         pub->setPages(PageRange::fromString(record.value("pages").toString()));
+        pub->setCiteKey(record.value("citeKey").toString());
 
         repository()->publications()->insert(id, pub);
 
@@ -182,6 +184,7 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     params.insert("title", pub->title());
     params.insert("abstract", pub->abstract());
     params.insert("year", pub->year());
+    params.insert("month", pub->month());
     params.insert("conference", pub->conference());
     params.insert("publisher", pub->publisher());
     params.insert("volume", pub->volume());
@@ -199,6 +202,7 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     params.insert("pages", pub->pages().toString());
     params.insert("authors", StringUtils::serialize(pub->authors()));
     params.insert("editors", StringUtils::serialize(pub->editors()));
+    params.insert("citeKey", pub->citeKey());
 
     if(pub->journal()) {
         params.insert("journalId", pub->journal()->id());
@@ -234,6 +238,7 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
     params.insert("title", pub->title());
     params.insert("abstract", pub->abstract());
     params.insert("year", pub->year());
+    params.insert("month", pub->month());
     params.insert("conference", pub->conference());
     params.insert("publisher", pub->publisher());
     params.insert("volume", pub->volume());
@@ -251,6 +256,7 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
     params.insert("pages", pub->pages().toString());
     params.insert("authors", StringUtils::serialize(pub->authors()));
     params.insert("editors", StringUtils::serialize(pub->editors()));
+    params.insert("citeKey", pub->citeKey());
 
     if(pub->journal()) {
         params.insert("journalId", pub->journal()->id());

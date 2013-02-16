@@ -32,6 +32,7 @@ QStringList databaseSchema()
                    "title TEXT NOT NULL,\n"
                    "abstract TEXT,\n"
                    "year INTEGER,\n"
+                   "month INTEGER,\n"
                    "conference TEXT,\n"
                    "publisher TEXT,\n"
                    "volume INTEGER,\n"
@@ -49,7 +50,21 @@ QStringList databaseSchema()
                    "pages TEXT,\n"
                    "authors TEXT,\n"
                    "editors TEXT,\n"
+                   "citeKey TEXT,\n"
+                   "keywords TEXT,\n"
+                   "notes TEXT,\n"
                    "FOREIGN KEY(journalId) references journal(id)\n"
+                   ");");
+
+    ret << QString("CREATE TABLE IF NOT EXISTS keyword (\n"
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                   "name TEXT NOT NULL UNIQUE\n"
+                   ");");
+
+    ret << QString("CREATE TABLE IF NOT EXISTS collection (\n"
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                   "name TEXT NOT NULL UNIQUE,\n"
+                   "documents TEXT\n"
                    ");");
 
     return ret;

@@ -181,6 +181,17 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
     QueryExecutor executor(database());
     QueryParameters params;
 
+    if(pub->journal()) {
+        Journal::Ptr realJournal = repository()->journalDAO()->findByName(pub->journal()->name(), true);
+
+        if(realJournal != pub->journal()) {
+            Journal::Ptr old = pub->journal();
+            pub->setJournal(realJournal);
+
+            delete old;
+        }
+    }
+
     params.insert("title", pub->title());
     params.insert("abstract", pub->abstract());
     params.insert("year", pub->year());
@@ -216,7 +227,6 @@ bool SQLiteDocumentDAO::save(Document::Ptr pub)
         qulonglong id = executor.lastInsertID();
         pub->setId(id);
 
-        repository()->journalDAO()->saveOrUpdate(pub->journal());
         repository()->publications()->insert(id, pub);
 
         emit dataChanged();

@@ -62,12 +62,27 @@ Journal::Ptr SQLiteJournalDAO::findById(qulonglong id) const
     return Journal::Ptr();
 }
 
-Journal::Ptr SQLiteJournalDAO::findByName(const QString& name) const
+Journal::Ptr SQLiteJournalDAO::findByName(const QString& name, bool createIfNotExists)
 {
+    for(Journal::Ptr journal: repository()->journals()->findAll()) {
+        if(journal->name() == name) {
+            return journal;
+        }
+    }
+
     QVariant id = QueryExecutor().columnValue("journal", "id", makeQueryParameters("name", name));
 
     if(id.isValid()) {
         return findById(id.toULongLong());
+    }
+
+    if(createIfNotExists) {
+        Journal::Ptr journal = new Journal();
+        journal->setName(name);
+
+        saveOrUpdate(journal);
+
+        return journal;
     }
 
     return Journal::Ptr(0);

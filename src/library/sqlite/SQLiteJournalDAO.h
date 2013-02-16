@@ -32,7 +32,7 @@ class SQLiteJournalDAO : public JournalDAO, public SQLiteBaseDAO
         virtual ~SQLiteJournalDAO();
 
         virtual Journal::Ptr findById(qulonglong id) const;
-        virtual Journal::Ptr findByName(const QString& name) const;
+        virtual Journal::Ptr findByName(const QString& name, bool createIfNotExists);
 
         virtual bool saveOrUpdate(Journal::Ptr author);
 

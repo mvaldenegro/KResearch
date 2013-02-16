@@ -19,6 +19,7 @@
 
 #include <QDebug>
 #include <QSqlRecord>
+#include <QSqlError>
 
 QueryExecutor::QueryExecutor(QSqlDatabase database)
 : mDatabase(database)
@@ -159,17 +160,20 @@ IDList QueryExecutor::queryOneToManyRelation(const QString& oneTableName, const 
 bool QueryExecutor::executeQuery(const QString& queryString, const QueryParameters& params, QSqlQuery *ret)
 {
     QSqlQuery query(database());
+    QString executedQuery = queryString;
     bool success = true;
 
     success &= query.prepare(queryString);
 
     for(QString key: params.keys()) {
         query.bindValue(placeholder(key), params.value(key));
+
+        executedQuery.replace(placeholder(key), params.value(key).toString());
     }
 
-    qDebug() << "Executing query:" << queryString;
-
     success &= query.exec();
+
+    qDebug() << "Executing query:" << executedQuery;
 
     if(success && (ret != nullptr)) {
         *ret = query;
@@ -179,6 +183,11 @@ bool QueryExecutor::executeQuery(const QString& queryString, const QueryParamete
         qDebug() << "Query successful";
     } else {
         qDebug() << "Query FAILED";
+
+        QSqlError error = query.lastError();
+
+        qDebug() << "Database error" << error.databaseText();
+        qDebug() << "Driver error" << error.driverText();
     }
 
     return success;

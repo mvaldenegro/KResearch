@@ -30,7 +30,7 @@ class JournalDAO : public BaseDAO, public GenericDAO<Journal>
         JournalDAO();
         virtual ~JournalDAO();
 
-        virtual Journal::Ptr findByName(const QString& name) const = 0;
+        virtual Journal::Ptr findByName(const QString& name, bool createIfNotExists = false) = 0;
         virtual QStringList journalNames() const = 0;
 };
 

@@ -21,6 +21,8 @@
 #include <QStringList>
 #include <QDebug>
 
+#include <library/Repository.h>
+
 #include <util/StringUtils.h>
 #include <util/NameUtils.h>
 
@@ -134,6 +136,18 @@ class BibtexDocumentFiller
 
             return cleanup(ret);
         }
+
+        Journal::Ptr parseJournal(const QString& journalName) const
+        {
+            if(!StringUtils::isNullOrEmpty(journalName)) {
+                Journal::Ptr journal = new Journal();
+                journal->setName(journalName);
+
+                return journal;
+            }
+
+            return nullptr;
+        }
 };
 
 class BibtexArticleFiller : public BibtexDocumentFiller
@@ -153,9 +167,7 @@ class BibtexArticleFiller : public BibtexDocumentFiller
             //Required fields
             document->setTitle(data["title"]);
 
-            Journal::Ptr journal = new Journal();
-            journal->setName(data["journal"]);
-            document->setJournal(journal);
+            document->setJournal(parseJournal(data["journal"]));
 
             document->setYear(data["year"].toInt());
             document->setAuthors(parseAuthors(data["author"]));

@@ -23,7 +23,7 @@
 #include <QDebug>
 
 SQLiteBaseDAO::SQLiteBaseDAO(SQLiteRepository *cache)
- : mObjectCache(cache)
+ : mTrx(nullptr), mObjectCache(cache)
 {
 }
 
@@ -31,42 +31,25 @@ SQLiteBaseDAO::~SQLiteBaseDAO()
 {
 }
 
-void SQLiteBaseDAO::debug(const QSqlQuery& query) const
+bool SQLiteBaseDAO::transaction()
 {
-    qDebug() << "Executing query:" << lastExecutedQuery(query);
-
-    handleErrors(query);
-}
-
-void SQLiteBaseDAO::handleErrors(const QSqlQuery& query) const
-{
-    QSqlError error = query.lastError();
-
-    if(error.isValid()) {
-        qDebug() << "Error executing query:" << error.text();
-    }
-}
-
-QString SQLiteBaseDAO::lastExecutedQuery(const QSqlQuery& query) const
-{
-    QString str = query.lastQuery();
-    QMap<QString, QVariant> bounds = query.boundValues();
-
-    foreach(QString key, bounds.keys()) {
-        str.replace(key, "\"" + bounds.value(key).toString() + "\"");
+    if(!mTrx) {
+        mTrx = new Transaction(database());
     }
 
-    return str;
+    return true;
 }
 
-qulonglong SQLiteBaseDAO::lastInsertRowID() const
+bool SQLiteBaseDAO::commit()
 {
-    QSqlQuery query("SELECT last_insert_rowid()", repository()->database());
-    debug(query);
+    delete mTrx;
 
-    if(query.next()) {
-        return query.record().value(0).toULongLong();
-    }
+    mTrx = nullptr;
 
-    return (qulonglong) -1;
+    return true;
+}
+
+bool SQLiteBaseDAO::rollback()
+{
+    return false;
 }

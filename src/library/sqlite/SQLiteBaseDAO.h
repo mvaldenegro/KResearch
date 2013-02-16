@@ -20,6 +20,7 @@
 
 #include <QSqlQuery>
 
+#include <library/sqlite/Transaction.h>
 #include <library/sqlite/SQLiteRepository.h>
 
 class SQLiteBaseDAO
@@ -27,13 +28,6 @@ class SQLiteBaseDAO
     public:
         SQLiteBaseDAO(SQLiteRepository *cache);
         virtual ~SQLiteBaseDAO();
-
-        void debug(const QSqlQuery &query) const;
-        void handleErrors(const QSqlQuery &query) const;
-
-        QString lastExecutedQuery(const QSqlQuery& query) const;
-
-        qulonglong lastInsertRowID() const;
 
         inline SQLiteRepository *repository() const
         {
@@ -46,11 +40,12 @@ class SQLiteBaseDAO
             return repository()->database();
         }
 
-        bool transaction() const;
-        bool commit() const;
-        bool rollback() const;
+        bool transaction();
+        bool commit();
+        bool rollback();
 
     private:
+        Transaction *mTrx;
         SQLiteRepository *mObjectCache;
 };
 

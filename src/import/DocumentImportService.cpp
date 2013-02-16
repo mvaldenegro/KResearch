@@ -75,9 +75,13 @@ bool DocumentImportService::importIntoLibrary(const QString& fileName)
 
 bool DocumentImportService::multipleImportIntoLibrary(Document::List docs)
 {
+    documentDAO()->beginTransaction();
+
     for(Document::Ptr doc: docs) {
         documentDAO()->saveOrUpdate(doc);
     }
+
+    documentDAO()->endTransaction();
 
     return true;
 }

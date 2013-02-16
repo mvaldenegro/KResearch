@@ -43,6 +43,15 @@ class GenericDAO
         {
             return false;
         }
+
+        virtual void beginTransaction()
+        {
+        }
+
+        virtual void endTransaction()
+        {
+        }
+
 };
 
 

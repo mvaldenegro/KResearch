@@ -282,3 +282,17 @@ bool SQLiteDocumentDAO::update(Document::Ptr pub)
 
     return ok;
 }
+
+void SQLiteDocumentDAO::beginTransaction()
+{
+    qDebug() << "Begin transaction at DocumentDAO";
+
+    transaction();
+}
+
+void SQLiteDocumentDAO::endTransaction()
+{
+    commit();
+
+    qDebug() << "End transaction at DocumentDAO";
+}

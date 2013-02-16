@@ -42,6 +42,9 @@ class SQLiteDocumentDAO : public DocumentDAO, public SQLiteBaseDAO
 
         virtual bool remove(Document::Ptr entity);
 
+        virtual void beginTransaction();
+        virtual void endTransaction();
+
     protected:
 
         bool save(Document::Ptr pub);

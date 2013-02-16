@@ -267,6 +267,36 @@ class BibtexMiscFiller : public BibtexDocumentFiller
         }
 };
 
+class BibtexManualFiller : public BibtexDocumentFiller
+{
+    public:
+        BibtexManualFiller() {}
+
+        virtual ~BibtexManualFiller() {}
+
+        virtual Document::Ptr fillDocument(const StringMap& data) const
+        {
+            Document::Ptr document = new Document();
+
+            //Type
+            document->setType(DocumentType::TechnicalDocumentation);
+
+            //Required fields
+            document->setTitle(data["title"]);
+
+            //Optional fields
+            document->setConference(data["booktitle"]);
+            document->setYear(data["year"].toInt());
+            document->setAuthors(parseAuthors(data["author"]));
+
+
+            document->setVolume(data["volume"].toInt());
+            document->setNumber(data["number"].toInt());
+
+            return document;
+        }
+};
+
 class BibtexNullFiller : public BibtexDocumentFiller
 {
     public:
@@ -292,7 +322,7 @@ inline QMap<QString, BibtexDocumentFiller *> createFillerMap()
     map.insert("inbook"         , nullptr);
     map.insert("incollection"   , nullptr);
     map.insert("inproceedings"  , new BibtexConferenceFiller());
-    map.insert("manual"         , nullptr);
+    map.insert("manual"         , new BibtexManualFiller());
     map.insert("masterthesis"   , nullptr);
     map.insert("misc"           , new BibtexMiscFiller());
     map.insert("phdthesis"      , nullptr);

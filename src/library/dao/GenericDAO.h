@@ -18,6 +18,7 @@
 #ifndef GENERICDAO_H_
 #define GENERICDAO_H_
 
+#include <QList>
 #include <qglobal.h>
 
 template<typename T>
@@ -34,6 +35,17 @@ class GenericDAO
         }
 
         virtual typename T::Ptr findById(qulonglong id) const = 0;
+
+        virtual typename T::List findByIds(QList<qulonglong> ids) const
+        {
+            typename T::List ret;
+
+            for(qulonglong id : ids) {
+                ret.append(findById(id));
+            }
+
+            return ret;
+        }
 
         virtual bool saveOrUpdate(typename T::Ptr entity) = 0;
 

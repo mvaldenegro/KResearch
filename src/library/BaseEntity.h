@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include <QStringList>
 #include <QList>
 
 typedef QList<qulonglong> IDList;
@@ -42,6 +43,19 @@ class BaseEntity
 
         bool equals(const BaseEntity& other) const;
         bool equals(const QSharedPointer<BaseEntity>& other) const;
+
+        template<typename T>
+        inline static QString serializeEntityIDs(typename T::List entities)
+        {
+            QStringList ret;
+
+            for(typename T::Ptr entity: entities) {
+                ret += QString::number(entity->id());
+            }
+
+            return ret.join(",");
+        }
+
 
     private:
         qulonglong mID;

@@ -174,3 +174,45 @@ void LibraryManager::loadConfig()
     mLibraryDatabaseFilename = config->group("library").readEntry("databaseFile", QString("library.sqlite"));
     mLibraryPath = config->group("library").readEntry("libraryPath", QString());
 }
+
+bool LibraryManager::fileInLibrary(Document::Ptr document) const
+{
+    QDir libraryDir(mLibraryPath);
+
+
+}
+
+bool LibraryManager::fileInLibrary(const QString& filename) const
+{
+
+}
+
+bool LibraryManager::moveToLibrary(Document::Ptr document)
+{
+
+}
+
+bool LibraryManager::copyToLibrary(Document::Ptr document)
+{
+
+}
+
+QString LibraryManager::folderPath(Document::Ptr document) const
+{
+
+}
+
+QString LibraryManager::formatFilename(Document::Ptr document) const
+{
+    QString ret;
+    
+    if(document->year() > 0) {
+        ret += QString::number(document->year());
+    } else {
+        ret += "Unknown";
+    }
+    
+    ret += " - ";
+    
+    return ret;
+}

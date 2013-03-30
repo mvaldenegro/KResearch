@@ -27,6 +27,7 @@
 #include "SQLiteDocumentDAO.h"
 #include "SQLiteJournalDAO.h"
 #include "SQLiteKeywordDAO.h"
+#include "SQLiteDocumentCollectionDAO.h"
 
 static IDList allIDs(QSqlDatabase db, const QString& tableName)
 {
@@ -47,6 +48,7 @@ SQLiteRepository::SQLiteRepository(QSqlDatabase db)
     mPublicationDAO = new SQLiteDocumentDAO(this);
     mJournalDAO = new SQLiteJournalDAO(this);
     mKeywordDAO = new SQLiteKeywordDAO(this);
+    mCollectionDAO = new SQLiteDocumentCollectionDAO(this);
 
     populate();
 }

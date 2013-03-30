@@ -15,21 +15,13 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Repository.h"
+#include "DocumentCollection.h"
 
-Repository *Repository::mInstance = 0;
-
-Repository::Repository()
+DocumentCollection::DocumentCollection()
 {
-    mAuthorCache = new RepositoryCache<Author>();
-    mPubCache = new RepositoryCache<Document>();
-    mJournalCache = new RepositoryCache<Journal>();
-    mCollectionCache = new RepositoryCache<DocumentCollection>();
-
-    mInstance = this;
 }
 
-Repository::~Repository()
+DocumentCollection::~DocumentCollection()
 {
 }
 

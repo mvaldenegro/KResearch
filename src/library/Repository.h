@@ -24,11 +24,13 @@
 #include <library/Document.h>
 #include <library/Journal.h>
 #include <library/Keyword.h>
+#include <library/DocumentCollection.h>
 
 #include <library/dao/AuthorDAO.h>
 #include <library/dao/DocumentDAO.h>
 #include <library/dao/JournalDAO.h>
 #include <library/dao/KeywordDAO.h>
+#include <library/dao/DocumentCollectionDAO.h>
 
 #include <library/RepositoryCache.h>
 
@@ -42,6 +44,7 @@ class Repository
         virtual DocumentDAO * publicationDAO() const = 0;
         virtual JournalDAO * journalDAO() const = 0;
         virtual KeywordDAO * keywordDAO() const = 0;
+        virtual DocumentCollectionDAO *collectionDAO() const = 0;
 
         virtual void populate() = 0;
 
@@ -65,6 +68,11 @@ class Repository
             return mKeywordCache;
         }
 
+        RepositoryCache<DocumentCollection> *collections()
+        {
+            return mCollectionCache;
+        }
+
         static Repository *self()
         {
             return mInstance;
@@ -77,6 +85,7 @@ class Repository
         RepositoryCache<Document> *mPubCache;
         RepositoryCache<Journal> *mJournalCache;
         RepositoryCache<Keyword> *mKeywordCache;
+        RepositoryCache<DocumentCollection> *mCollectionCache;
 };
 
 #endif /* REPOSITORY_H_ */

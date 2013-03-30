@@ -21,6 +21,8 @@
 #include <QSqlDatabase>
 #include <QString>
 
+#include <library/Document.h>
+
 class Repository;
 
 class LibraryManager
@@ -49,6 +51,12 @@ class LibraryManager
             return mInstance;
         }
 
+        bool fileInLibrary(Document::Ptr document) const;
+        bool fileInLibrary(const QString& filename) const;
+
+        bool moveToLibrary(Document::Ptr document);
+        bool copyToLibrary(Document::Ptr document);
+
     protected:
         void init();
         void shutdown();
@@ -60,6 +68,9 @@ class LibraryManager
 
         void saveConfig();
         void loadConfig();
+
+        QString folderPath(Document::Ptr document) const;
+        QString formatFilename(Document::Ptr document) const;
 
     private:
         QString mLibraryPath;

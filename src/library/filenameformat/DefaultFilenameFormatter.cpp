@@ -15,21 +15,41 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Repository.h"
+#include "DefaultFilenameFormatter.h"
 
-Repository *Repository::mInstance = 0;
-
-Repository::Repository()
-{
-    mAuthorCache = new RepositoryCache<Author>();
-    mPubCache = new RepositoryCache<Document>();
-    mJournalCache = new RepositoryCache<Journal>();
-    mCollectionCache = new RepositoryCache<DocumentCollection>();
-
-    mInstance = this;
-}
-
-Repository::~Repository()
+DefaultFilenameFormatter::DefaultFilenameFormatter()
 {
 }
 
+DefaultFilenameFormatter::~DefaultFilenameFormatter()
+{
+}
+
+QString DefaultFilenameFormatter::formatFilename(Document::Ptr document) const
+{
+    QString ret;
+    
+    if(document->year() > 0) {
+        ret += QString::number(document->year());
+    } else {
+        ret += "Unknown";
+    }
+    
+    ret += " - ";    
+    ret += document->authors().join(" ");
+    ret += " - ";
+    ret += document->title();
+    
+    return ret;    
+}
+
+QString DefaultFilenameFormatter::formatLibraryFolder(Document::Ptr document) const
+{
+    QString ret;
+    
+    if(document->journal()) {
+        
+    }
+    
+    return ret;
+}

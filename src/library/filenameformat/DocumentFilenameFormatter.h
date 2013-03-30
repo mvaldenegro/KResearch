@@ -15,21 +15,21 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Repository.h"
+#ifndef DOCUMENTFILENAMEFORMATTER_H
+#define	DOCUMENTFILENAMEFORMATTER_H
 
-Repository *Repository::mInstance = 0;
+#include <library/Document.h>
 
-Repository::Repository()
-{
-    mAuthorCache = new RepositoryCache<Author>();
-    mPubCache = new RepositoryCache<Document>();
-    mJournalCache = new RepositoryCache<Journal>();
-    mCollectionCache = new RepositoryCache<DocumentCollection>();
+#include <QString>
 
-    mInstance = this;
-}
+class DocumentFilenameFormatter {
+    public:
+        DocumentFilenameFormatter();
+        virtual ~DocumentFilenameFormatter();
+        
+        virtual QString formatFilename(Document::Ptr document) const = 0;
+        virtual QString formatLibraryFolder(Document::Ptr document) const = 0;
+};
 
-Repository::~Repository()
-{
-}
+#endif	/* DOCUMENTFILENAMEFORMATTER_H */
 

@@ -15,21 +15,20 @@
  * along with kresearch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Repository.h"
+#ifndef DEFAULTFILENAMEFORMATTER_H
+#define	DEFAULTFILENAMEFORMATTER_H
 
-Repository *Repository::mInstance = 0;
+#include <library/filenameformat/DocumentFilenameFormatter.h>
 
-Repository::Repository()
-{
-    mAuthorCache = new RepositoryCache<Author>();
-    mPubCache = new RepositoryCache<Document>();
-    mJournalCache = new RepositoryCache<Journal>();
-    mCollectionCache = new RepositoryCache<DocumentCollection>();
+class DefaultFilenameFormatter : DocumentFilenameFormatter {
+    public:
+        DefaultFilenameFormatter();
+        DefaultFilenameFormatter(const DefaultFilenameFormatter& orig);
+        virtual ~DefaultFilenameFormatter();
+    
+        virtual QString formatFilename(Document::Ptr document) const;
+        virtual QString formatLibraryFolder(Document::Ptr document) const;
+};
 
-    mInstance = this;
-}
-
-Repository::~Repository()
-{
-}
+#endif	/* DEFAULTFILENAMEFORMATTER_H */
 

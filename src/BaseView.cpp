@@ -21,12 +21,10 @@
 #include <QHeaderView>
 
 #include <library/Repository.h>
-#include <import/DocumentImportService.h>
 
 BaseView::BaseView(QWidget *parent)
  : QWidget(parent)
 {
-    mImportService = new DocumentImportService(Repository::self()->publicationDAO());
 }
 
 BaseView::~BaseView()

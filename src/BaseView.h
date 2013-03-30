@@ -31,19 +31,11 @@ class BaseView : public QWidget
         BaseView(QWidget *parent = 0);
         virtual ~BaseView();
 
-        DocumentImportService *importService() const
-        {
-            return mImportService;
-        }
-
         virtual void saveConfig();
         virtual void loadConfig();
 
     protected:
         void configureTableView(QTableView *view);
-
-    private:
-        DocumentImportService *mImportService;
 };
 
 #endif /* BASEVIEW_H_ */

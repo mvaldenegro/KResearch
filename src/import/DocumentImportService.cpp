@@ -21,13 +21,14 @@
 #include <import/importers/PDFDocumentImporter.h>
 #include <import/importers/BibtexDocumentImporter.h>
 #include <library/dao/DocumentDAO.h>
+#include <library/Repository.h>
 
 #include <QFileInfo>
 #include <QDebug>
 
 #include <assert.h>
 
-DocumentImportService *DocumentImportService::mSelf = 0;
+DocumentImportService *DocumentImportService::mSelf = nullptr;
 
 DocumentImportService::DocumentImportService(DocumentDAO *pubDAO)
 : mPubDAO(pubDAO)
@@ -137,5 +138,9 @@ void DocumentImportService::removeImporter(DocumentImporter *importer)
 
 DocumentImportService *DocumentImportService::self()
 {
+    if(mSelf == nullptr) {
+        mSelf = new DocumentImportService(Repository::self()->publicationDAO());
+    }
+    
     return mSelf;
 }

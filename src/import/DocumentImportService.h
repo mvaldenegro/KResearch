@@ -28,7 +28,6 @@ class DocumentDAO;
 class DocumentImportService
 {
     public:
-        DocumentImportService(DocumentDAO *pubDAO);
         virtual ~DocumentImportService();
 
         bool importIntoLibrary(const QString& fileName);
@@ -43,6 +42,8 @@ class DocumentImportService
         static DocumentImportService *self();
 
     protected:
+        DocumentImportService(DocumentDAO *pubDAO);
+        
         DocumentDAO *documentDAO() const
         {
             return mPubDAO;

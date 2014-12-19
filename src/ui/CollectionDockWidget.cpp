@@ -33,7 +33,7 @@ CollectionDockWidget::CollectionDockWidget(QWidget *parent)
 
     setupLibraryTree();
 
-    connect(mTree, SIGNAL(itemClicked(QTreeWidgetItem *, int)), this, SLOT(itemActivated(QTreeWidgetItem *, int)));
+    connect(mTreeView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(itemActivated(const QModelIndex&)));
 }
 
 CollectionDockWidget::~CollectionDockWidget()
@@ -42,54 +42,41 @@ CollectionDockWidget::~CollectionDockWidget()
 
 void CollectionDockWidget::setupLibraryTree()
 {
-    mTree = new QTreeWidget(this);
+    mTreeView = new QTreeView(this);
 
-
-    mTree->setColumnCount(1);
-    mTree->setHeaderHidden(true);
-    mTree->setIndentation(10);
-    mTree->setIconSize(QSize(32, 32));
+    mTreeView->setHeaderHidden(true);
+    //mTree->setIndentation(10);
+    mTreeView->setIconSize(QSize(24, 24));
 
     //mTree->setStyleSheet("QTreeView::branch:has-children {image: url(:/images/1rightarrow.png)}"
     //                     "QTreeView::branch:open {image: url(:/images/1downarrow.png)}");
 
-    QFont font = QTreeWidgetItem().font(0);
+    mTree = new CollectionTree();
+
+    mTreeModel = new CollectionTreeModel(this);
+    mTreeModel->setTree(mTree);
+
+    mTreeView->setModel(mTreeModel);
+    mTreeView->expandAll();
+
+    QFont font = mTreeView->font();
     font.setBold(true);
+    mTreeView->setFont(font);
 
-    mLibraryItem = new QTreeWidgetItem(mTree, QStringList("Library"));
-    mLibraryItem->setFont(0, font);
-
-    QTreeWidgetItem *articles = new QTreeWidgetItem(mLibraryItem, QStringList("Articles"));
-    articles->setIcon(0, KIcon("document-multiple"));
-    QTreeWidgetItem *authors = new QTreeWidgetItem(mLibraryItem, QStringList("Authors"));
-    authors->setIcon(0, KIcon("user-identity"));
-    QTreeWidgetItem *journals  = new QTreeWidgetItem(mLibraryItem, QStringList("Journals"));
-    journals->setIcon(0, KIcon("application-epub+zip"));
-
-    mResearchItem = new QTreeWidgetItem(mTree, QStringList("Research"));
-    mResearchItem->setFont(0, font);
-
-    QTreeWidgetItem *notes = new QTreeWidgetItem(mResearchItem, QStringList("Notes"));
-    notes->setIcon(0, KIcon("folder-txt"));
-
-    mSourcesItem = new QTreeWidgetItem(mTree, QStringList("Sources"));
-    mSourcesItem->setFont(0, font);
-
-    (new QTreeWidgetItem(mSourcesItem, QStringList("Conferences")))->setIcon(0, KIcon("meeting-attending"));
-    (new QTreeWidgetItem(mSourcesItem, QStringList("Periodicals")))->setIcon(0, KIcon("knewsticker"));
-    (new QTreeWidgetItem(mSourcesItem, QStringList("Web")))->setIcon(0, KIcon("document-open-remote"));
-
-    mCollectionsItem  = new QTreeWidgetItem(mTree, QStringList("Collections"));
-    mCollectionsItem->setFont(0, font);
-
-    mTree->expandAll();
-
-    setWidget(mTree);
+    setWidget(mTreeView);
 }
 
-void CollectionDockWidget::itemActivated(QTreeWidgetItem *item, int column)
+void CollectionDockWidget::itemActivated(const QModelIndex& index)
 {
-    Q_UNUSED(column);
+    qDebug() << "Activating index" << index.internalPointer();
 
-    emit changeView(item->text(0));
+    if(!index.isValid()) {
+        return;
+    }
+
+    CollectionTreeItem *item = static_cast<CollectionTreeItem *>(index.internalPointer());
+
+    if(item != nullptr) {
+        item->activate();
+    }
 }

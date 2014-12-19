@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2012 Matias Valdenegro <matias.valdenegro@gmail.com>
+1 * Copyright (C) 2011-2012 Matias Valdenegro <matias.valdenegro@gmail.com>
  * This file is part of kresearch.
  *
  * kresearch is free software: you can redistribute it and/or modify
@@ -69,6 +69,30 @@ QVariant DocumentModel::data(const QModelIndex& index, int role) const
 
     if(role == Qt::EditRole) {
         return handleRead(pub, j);
+    }
+
+    if(role == Qt::TextAlignmentRole) {
+        switch(j) {
+            case 0: {
+                return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
+            }
+
+            case 1: {
+                return QVariant(Qt::AlignLeft | Qt::AlignVCenter);
+            }
+
+            case 2: {
+                return QVariant(Qt::AlignRight | Qt::AlignVCenter);
+            }
+
+            case 3: {
+                return QVariant(Qt::AlignRight | Qt::AlignVCenter);
+            }
+
+            case 4: {
+                return QVariant(Qt::AlignRight | Qt::AlignVCenter);
+            }
+        }
     }
 
     return QVariant();
@@ -212,7 +236,11 @@ QVariant DocumentModel::handleRead(Document::Ptr pub, int column) const
         }
 
         case 2: {
-            return pub->year();
+            if(pub->year() > 0) {
+                return pub->year();
+            } else {
+                return QVariant();
+            }
         }
 
         case 3: {

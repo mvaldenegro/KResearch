@@ -5,9 +5,7 @@ include (KDE4Defaults)
 include_directories(${KDE4_INCLUDES})
 include_directories(src)
 
-if (CMAKE_COMPILER_IS_GNUCXX)
-  set ( CMAKE_CXX_FLAGS "-Wall -pedantic -Wno-long-long -std=c++11")
-endif ()
+set ( CMAKE_CXX_FLAGS "-Wall -pedantic -Wno-long-long -std=c++11")
 
 file(GLOB kresearch_SOURCES src/*.cpp src/*/*.cpp src/*/*/*.cpp)
 

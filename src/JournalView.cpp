@@ -19,6 +19,7 @@
 
 #include <QVBoxLayout>
 #include <QTableView>
+#include <QHeaderView>
 
 #include <library/Repository.h>
 #include <library/model/JournalModel.h>
@@ -30,6 +31,7 @@ JournalView::JournalView(QWidget *parent)
     setLayout(layout);
 
     mJournalView = new QTableView(this);
+    mJournalView->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
     configureTableView(mJournalView);
 

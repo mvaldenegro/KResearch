@@ -21,7 +21,7 @@
 #include <KMainWindow>
 
 class CollectionDockWidget;
-class InformationDockWidget;
+class InfoPanelDock;
 class LibraryView;
 class AuthorView;
 class JournalView;
@@ -56,7 +56,7 @@ class MainWindow : public KMainWindow
 	    QStackedWidget *mViewWidget;
 
 		CollectionDockWidget *mLeftDock;
-		InformationDockWidget *mRightDock;
+		InfoPanelDock *mRightDock;
 
 		LibraryView *mLibraryView;
 		AuthorView *mAuthorView;

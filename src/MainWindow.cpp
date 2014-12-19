@@ -25,6 +25,8 @@
 #include <ui/CollectionDockWidget.h>
 #include <ui/ConcealedTabWidget.h>
 
+#include <ui/infopanel/InfoPanelDock.h>
+
 #include <QDebug>
 #include <QStackedWidget>
 
@@ -157,7 +159,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::setupDockWidgets()
 {
     mLeftDock = new CollectionDockWidget(this);
-    mRightDock = new InformationDockWidget(this);
+    mRightDock = new InfoPanelDock(this);
 
     addDockWidget(Qt::LeftDockWidgetArea, mLeftDock);
     addDockWidget(Qt::RightDockWidgetArea, mRightDock);

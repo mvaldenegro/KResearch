@@ -43,10 +43,11 @@ void BaseView::configureTableView(QTableView *view)
 {
     view->setAlternatingRowColors(true);
     view->verticalHeader()->hide();
-    view->horizontalHeader()->setResizeMode(QHeaderView::Interactive);
+    view->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
     view->setSelectionBehavior(QAbstractItemView::SelectRows);
     view->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     view->setEditTriggers(QAbstractItemView::AnyKeyPressed);
+    view->setShowGrid(false);
 }

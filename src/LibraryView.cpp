@@ -63,7 +63,6 @@ LibraryView::LibraryView(QWidget *parent)
     mArticleView->setModel(new DocumentModel(Repository::self()->publicationDAO(), Repository::self()->journalDAO()));
     mArticleView->setAcceptDrops(true);
 
-
     mSelectedPub = Document::Ptr(0);
 
     loadConfig();
@@ -89,7 +88,7 @@ void LibraryView::loadConfig()
 
     QByteArray headerState = config->group("libraryview").readEntry("headerstate", QByteArray());
 
-    mArticleView->horizontalHeader()->restoreState(headerState);
+    //mArticleView->horizontalHeader()->restoreState(headerState);
 }
 
 void LibraryView::import()
@@ -100,7 +99,7 @@ void LibraryView::import()
         return;
     }
 
-    importService()->importIntoLibrary(fileName);
+    DocumentImportService::self()->importIntoLibrary(fileName);
 }
 
 void LibraryView::edit()

@@ -19,9 +19,10 @@
 #define LIBRARYDOCKWIDGET_H_
 
 #include <QDockWidget>
+#include <QTreeView>
 
-class QTreeWidget;
-class QTreeWidgetItem;
+#include <ui/treepanel/CollectionTree.h>
+#include <ui/treepanel/CollectionTreeModel.h>
 
 class CollectionDockWidget : public QDockWidget
 {
@@ -37,16 +38,13 @@ class CollectionDockWidget : public QDockWidget
     protected:
         void setupLibraryTree();
 
-    protected Q_SLOTS:
-        void itemActivated(QTreeWidgetItem *item, int column);
+    private Q_SLOTS:
+        void itemActivated(const QModelIndex& index);
 
     private:
-
-        QTreeWidget *mTree;
-        QTreeWidgetItem *mLibraryItem;
-        QTreeWidgetItem *mResearchItem;
-        QTreeWidgetItem *mSourcesItem;
-        QTreeWidgetItem *mCollectionsItem;
+        QTreeView *mTreeView;
+        CollectionTreeModel *mTreeModel;
+        CollectionTree *mTree;
 };
 
 #endif /* LIBRARYDOCKWIDGET_H_ */
